@@ -101,3 +101,20 @@
     text-decoration: none;
   }
 }
+
+/* Wave hero (WaveSystem) — classes toggled from JS / ScrollTrigger */
+@layer utilities {
+  .wave-disp-visible {
+    color: rgba(201, 168, 76, 0.4);
+  }
+
+  .wave-cursor-on-wave {
+    transform: translate(-50%, -50%) scale(2.5);
+    background-color: rgba(201, 168, 76, 0.5);
+  }
+
+  .wave-nav-dot-active {
+    transform: scale(2.4);
+    background-color: var(--color-gold);
+  }
+}

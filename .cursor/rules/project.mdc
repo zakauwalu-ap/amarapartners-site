@@ -1,0 +1,129 @@
+---
+description: Core rules for the Amara & Partners legal consultancy website
+globs: **/*
+alwaysApply: true
+---
+
+# Amara & Partners Website -- Cursor AI Rules
+
+## Project Overview
+- Professional legal consultancy website for Amara & Partners Legal Consultants
+- Based in Abu Dhabi, UAE. Offices on Reem Island.
+- Built with Next.js 15 (App Router), Tailwind CSS, and TypeScript
+- Design tone: modern, approachable, premium, trustworthy
+- Inspired visually by aoshearman.com -- adapted for boutique firm positioning
+
+## Tech Stack
+- Framework: Next.js 15 with App Router
+- Language: TypeScript -- always use proper types, never use `any`
+- Styling: Tailwind CSS only -- never write plain CSS unless unavoidable
+- Animations: GSAP + ScrollTrigger for scroll-driven effects, Framer Motion for UI transitions
+- Deployment: Vercel (production), Dokploy (staging)
+- CMS: To be decided later -- build frontend with static/placeholder data for now
+
+## Brand Colors (Tailwind tokens defined in tailwind.config.ts)
+- wave-100: #B8CCDE  (sky / lightest background)
+- wave-200: #7BA3C9  (upper wave)
+- wave-300: #4A7DB5  (mid-upper wave)
+- wave-400: #2B5F9E  (mid wave / primary interactive)
+- wave-500: #1A4380  (deep wave)
+- wave-600: #0D2E5C  (deepest wave / footer)
+- wave-700: #091D3A  (near-black / text on light)
+- gold: #C9A84C     (accent -- CTAs, highlights, hover)
+- cream: #F5F0E8    (light background alternative)
+- Brand Blue: #496BB3
+- Brand Gold: #DBCDAE
+- Charcoal: #1E242D
+- Shadow Grey: #565E71
+- Light Grey: #E2E3E4
+
+## Typography
+- Headings: Cormorant Garamond (Google Fonts) -- weights 400, 500, 600
+- Body: DM Sans (Google Fonts) -- weights 400, 500, 700
+- Loaded via next/font (self-hosted, zero external requests)
+- Type scale:
+  - H1: 32px/36px, Bold, tracking-wide
+  - H2: 24px/30px, Medium, tracking-normal
+  - H3: 20px/26px, Regular
+  - Body: 16px/24px Regular
+  - Small: 14px/20px Regular
+
+## Project Structure
+- Pages: src/app/
+- Components: src/components/
+  - src/components/layout/     (Navigation, Footer, PageHeader)
+  - src/components/sections/   (Hero, FirmIntro, PillarCards, etc.)
+  - src/components/ui/         (Button, Card, Input, Badge, etc.)
+  - src/components/waves/      (WaveSystem, WaveLayer)
+- Utilities: src/lib/
+- Hooks: src/hooks/
+- Types: src/types/
+- Public assets: public/images/, public/fonts/, public/waves/
+
+## Site Structure (Pages)
+- / (Home)
+- /about
+- /practice (overview)
+- /practice/[slug] (individual practice areas + pillar landing pages)
+- /industries (overview)
+- /industries/[slug]
+- /insights (hub)
+- /insights/[slug]
+- /jurisdictions
+- /people (BUILT but hidden from nav at launch)
+- /people/[slug]
+- /contact
+- /privacy-policy
+- /terms-of-use
+
+## Practice Areas (22 total across 3 pillars)
+Pillar 1 - Corporate & Transactions:
+corporate-commercial, cross-border-ma, free-zone-structuring,
+banking-and-finance, islamic-finance, real-estate, intellectual-property
+
+Pillar 2 - Disputes:
+litigation, arbitration, mediation, dispute-resolution
+
+Pillar 3 - Regulatory & Compliance:
+corporate-compliance, data-protection, export-control, tax-advisory,
+healthcare-regulatory, employment-and-pension, legislative-drafting
+
+Industries (5):
+aviation-and-space, engineering-and-construction, oil-and-gas,
+technology-media-telecommunications, healthcare-life-sciences
+
+## Code Style Rules
+- Always use functional components with arrow functions
+- Use TypeScript interfaces for all props -- never use `any`
+- Use `const` by default, `let` only when reassignment is needed
+- Never use `var`
+- Always add clear comments explaining what each section does
+- Keep components small and single-purpose
+
+## Next.js Rules
+- App Router always -- never use Pages Router patterns
+- Use next/image for every image -- never use plain <img> tags
+- Use next/link for all internal links -- never use plain <a> tags
+- Server components are the default
+- Only add "use client" when necessary (animations, useState, useEffect)
+- Use Next.js Metadata API for SEO -- never manually write <head> tags
+- Never use getServerSideProps or getStaticProps (deprecated)
+
+## Styling Rules
+- Mobile-first always -- base styles for mobile, md: and lg: for larger screens
+- Use Tailwind spacing scale -- avoid arbitrary values like w-[347px] unless truly necessary
+- Never use inline styles
+- RTL-ready: use logical CSS properties (padding-inline-start not padding-left)
+
+## Animation Rules
+- GSAP + ScrollTrigger for all scroll-driven animations
+- Framer Motion for component transitions, nav animations, hover states
+- Always respect prefers-reduced-motion -- disable all animations when set
+- Wave parallax scroll speed factors: wave-100: 0.2, wave-200: 0.35, wave-300: 0.5, wave-400: 0.65, wave-500: 0.8, wave-600: 1.0
+
+## What To Avoid
+- Never install packages without asking first
+- Never use TypeScript `any` type
+- Never use deprecated Next.js patterns
+- Never use plain CSS when Tailwind can do the job
+- Never use <img> or <a> tags for internal content

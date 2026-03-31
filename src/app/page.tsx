@@ -1,65 +1,88 @@
-import Image from "next/image";
+// src/app/page.tsx -- Component visual test page
+// Replace this with the real Home page in Phase 3.
+// For now it exists purely to preview components as we build them.
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { InputTestSection } from "@/components/dev/InputTestSection";
+
+// ---------------------------------------------------------------------------
+// MOCK DATA -- placeholders until src/data/ files are built
+// ---------------------------------------------------------------------------
+
+const mockPillar = {
+  number: "01",
+  name: "Corporate & Transactions",
+  description:
+    "Advising on the full spectrum of corporate matters, from cross-border M&A and free zone structuring to banking, finance, and real estate transactions across the UAE.",
+  href: "/practice/corporate",
+};
+
+const mockInsight = {
+  title: "ADGM's New Arbitration Framework: What it Means for Regional Disputes",
+  excerpt:
+    "The Abu Dhabi Global Market has introduced significant amendments to its arbitration regulations. We break down the key changes and their practical implications for businesses operating in the region.",
+  date: "12 June 2025",
+  readTime: "5 min read",
+  category: "Disputes",
+  href: "/insights/adgm-arbitration-2025",
+  image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80",
+  imageAlt: "Abstract legal document background",
+};
+
+const mockPerson = {
+  name: "Sarah Al Maktoum",
+  role: "Senior Associate",
+  initials: "SM",
+  specialisations: ["Corporate", "M&A", "Free Zones"],
+};
+
+// ---------------------------------------------------------------------------
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen p-8 bg-wave-500 space-y-16">
+      {/* SECTION: Button tests (preserved from Phase 1) */}
+      <section className="space-y-4">
+        <p className="font-body text-body-sm text-wave-200 uppercase tracking-widest">Buttons</p>
+        <div className="flex flex-wrap gap-4">
+          <Button variant="primary" size="lg" arrow>
+            Get in Touch
+          </Button>
+          <Button variant="secondary" arrow>
+            Learn More
+          </Button>
+          <Button variant="ghost" arrow>
+            Read our latest insights
+          </Button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* SECTION: Card tests */}
+      <section className="space-y-4">
+        <p className="font-body text-body-sm text-wave-200 uppercase tracking-widest">Cards</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
+          <Card variant="practice" pillar={mockPillar} />
+          <Card variant="insight" insight={mockInsight} />
+          <Card variant="person" person={mockPerson} />
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* SECTION: Badge tests */}
+      <section className="space-y-3">
+        <p className="font-body text-body-sm text-wave-200 uppercase tracking-widest">Badges</p>
+        <div className="flex flex-wrap gap-3">
+          <Badge>Corporate</Badge>
+          <Badge>Disputes</Badge>
+          <Badge variant="dark">Regulatory</Badge>
+          <Badge variant="dark">Aviation</Badge>
+        </div>
+      </section>
+
+      {/* SECTION: Input tests (client island — stateful) */}
+      <InputTestSection />
+    </main>
   );
 }

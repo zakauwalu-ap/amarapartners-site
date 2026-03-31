@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave Prototype v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:  #003577;
+  --blue1: #00479e;
+  --blue2: #3362ae;
+  --blue3: #547dbd;
+  --blue4: #99b5d8;
+  --gold:  #ecd595;
+}
+
+body {
+  background: var(--navy);
+  color: var(--blue4);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ------------------------------------------------------------------ CURSOR */
+#cursor {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-50%, -50%, 0);
+  mix-blend-mode: screen;
+  transition: transform 0.1s ease, background 0.2s;
+}
+#cursor.on-wave {
+  transform: translate3d(-50%, -50%, 0) scale(2.5);
+  background: rgba(236,213,149,0.5);
+}
+
+/* -------------------------------------------------------- SCROLL DRIVER */
+#scroll-driver {
+  height: 700vh;
+  position: relative;
+}
+
+/* -------------------------------------------------------------- HERO */
+#hero {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  contain: layout style paint;
+}
+
+/* --------------------------------------------------------- WAVE LAYERS */
+.wave-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+.wave-layer svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* -------------------------------------------------------- SECTION PANELS */
+.section-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 10vh 8vw;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+  contain: layout style;
+}
+.section-panel.visible {
+  pointer-events: auto;
+}
+.section-panel .panel-inner {
+  max-width: 620px;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+.section-panel .s-num {
+  font-family: 'Cormorant SC', serif;
+  font-size: clamp(5rem, 14vw, 11rem);
+  font-weight: 300;
+  line-height: 1;
+  user-select: none;
+  position: absolute;
+  top: 6vh;
+  right: 6vw;
+  opacity: 0.12;
+}
+.section-panel .s-accent {
+  position: absolute;
+  left: 0; top: 20vh;
+  width: 3px;
+  height: 15vh;
+  opacity: 0.6;
+}
+.section-panel .s-tag {
+  font-size: 0.58rem;
+  letter-spacing: 0.48em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.55;
+  margin-bottom: 2.2rem;
+}
+.section-panel h2 {
+  font-family: 'Cormorant SC', serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  font-weight: 300;
+  color: var(--blue4);
+  line-height: 1.08;
+}
+.section-panel p {
+  font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+  font-weight: 200;
+  line-height: 2;
+  color: rgba(153,181,216,0.45);
+  max-width: 440px;
+  margin-top: 2.4rem;
+}
+.section-panel .detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.8rem 3rem;
+  margin-top: 3rem;
+  max-width: 480px;
+}
+.section-panel .detail-item .label {
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(153,181,216,0.3);
+  margin-bottom: 0.4rem;
+}
+.section-panel .detail-item .value {
+  font-family: 'Cormorant SC', serif;
+  font-size: 1.1rem;
+  color: var(--blue4);
+  font-weight: 300;
+}
+
+/* Panel color accents */
+#sp1 .s-num { color: var(--blue1); }
+#sp1 .s-accent { background: var(--blue1); }
+#sp2 .s-num { color: var(--blue2); }
+#sp2 .s-accent { background: var(--blue2); }
+#sp3 .s-num { color: var(--blue3); }
+#sp3 .s-accent { background: var(--blue3); }
+#sp4 .s-num { color: var(--blue4); }
+#sp4 .s-accent { background: var(--blue4); }
+
+/* ------------------------------------------------------- HERO CONTENT */
+#hero-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 7vh 8vw 9vh;
+  z-index: 30;
+  pointer-events: none;
+  will-change: opacity;
+}
+#hero-content .eyebrow {
+  font-size: clamp(0.6rem, 1.1vw, 0.75rem);
+  font-weight: 200;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(153,181,216,0.55);
+  margin-bottom: 1.6rem;
+  opacity: 0;
+  animation: revealUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+}
+#hero-content h1 {
+  font-family: 'Cormorant SC', serif;
+  font-size: clamp(3.8rem, 9.5vw, 8.5rem);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 0.93;
+  letter-spacing: 0.015em;
+  opacity: 0;
+  animation: revealUp 1.6s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+
+/* scroll hint */
+#scroll-hint {
+  position: absolute;
+  bottom: 5vh;
+  right: 6vw;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeIn 1.2s ease 1.4s forwards;
+  will-change: opacity;
+}
+#scroll-hint span {
+  font-size: 0.58rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(153,181,216,0.45);
+}
+.hint-line {
+  width: 48px;
+  height: 1px;
+  background: var(--gold);
+  transform-origin: right;
+  animation: shimmer 2.4s ease-in-out 1.8s infinite;
+}
+
+/* displacement label */
+#disp-label {
+  position: absolute;
+  bottom: 5vh;
+  left: 8vw;
+  z-index: 30;
+  font-size: 0.58rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(236,213,149,0);
+  transition: color 0.6s ease;
+  pointer-events: none;
+}
+#disp-label.visible { color: rgba(236,213,149,0.4); }
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes shimmer {
+  0%, 100% { transform: scaleX(0.25); opacity: 0.4; }
+  50%      { transform: scaleX(1);    opacity: 1; }
+}
+
+/* ---------------------------------------------------- NAV DOTS */
+#nav {
+  position: fixed;
+  right: 2.2vw;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  z-index: 100;
+}
+.ndot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(153,181,216,0.25);
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.ndot.active {
+  background: var(--gold);
+  transform: scale(2.4);
+}
+
+/* ------------------------------------------------------- FOOTER */
+.footer-section {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--navy);
+  padding: 10vh 10vw;
+  text-align: center;
+}
+.footer-section p {
+  font-size: clamp(0.75rem, 1.1vw, 0.85rem);
+  font-weight: 200;
+  line-height: 2;
+  color: rgba(153,181,216,0.3);
+  max-width: 500px;
+}
+.footer-section .cta {
+  display: inline-block;
+  margin-top: 2rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.6;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(236,213,149,0.2);
+  padding-bottom: 4px;
+  transition: opacity 0.3s;
+}
+.footer-section .cta:hover { opacity: 1; }
+
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="disp-label">Field active</div>
+
+<div id="nav">
+  <div class="ndot active"></div>
+  <div class="ndot"></div>
+  <div class="ndot"></div>
+  <div class="ndot"></div>
+  <div class="ndot"></div>
+</div>
+
+<!-- ========================================================== SCROLL DRIVER -->
+<div id="scroll-driver">
+  <div id="hero">
+
+    <!-- LAYER 0: static background -->
+    <div class="wave-layer" style="z-index:1">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <rect width="1920" height="1080" fill="#003577"/>
+        <line x1="0" y1="540" x2="1920" y2="540" stroke="rgba(0,71,158,0.1)" stroke-width="1"/>
+        <line x1="960" y1="0" x2="960" y2="1080" stroke="rgba(0,71,158,0.1)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- SECTION PANEL 1 -->
+    <div class="section-panel" id="sp1" style="z-index:1">
+      <div class="s-num">01</div>
+      <div class="s-accent"></div>
+      <div class="panel-inner">
+        <div class="s-tag">Foundation</div>
+        <h2>The depths that<br>anchor everything</h2>
+        <p>The first movement. Dark, still, saturated with latent potential
+           beneath the surface of what we see. Here is where it all begins.</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="label">Discipline</div>
+            <div class="value">Brand Strategy</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Focus</div>
+            <div class="value">Core Identity</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Phase</div>
+            <div class="value">Discovery</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Duration</div>
+            <div class="value">4 -- 6 Weeks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER 1: darkest (#00479e) - departs DOWN -->
+    <div class="wave-layer" id="l1" style="z-index:2">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="f1" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.004 0.003"
+              numOctaves="2" seed="3" result="n">
+              <animate attributeName="baseFrequency"
+                values="0.003 0.002; 0.005 0.004; 0.004 0.003; 0.003 0.002"
+                dur="18s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"/>
+            </feTurbulence>
+            <feDisplacementMap id="d1" in="SourceGraphic" in2="n"
+              scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <path filter="url(#f1)" fill="#00479e"
+          d="M1.23,740.68l53.34-5.22c53.44-5.12,160.13-15.55,266.92-18.86,
+             106.79-3.31,213.47.3,320.26,23.87,106.79,23.57,213.47,67.11,
+             320.26,84.97,106.79,17.86,213.47,10.23,320.26,10.03,
+             106.79-.2,213.47,7.22,320.26-1.81,106.79-9.03,213.47-34.51,
+             266.92-47.15l53.34-12.74V39.49H1.23v701.19Z"/>
+      </svg>
+    </div>
+
+    <!-- SECTION PANEL 2 -->
+    <div class="section-panel" id="sp2" style="z-index:2">
+      <div class="s-num">02</div>
+      <div class="s-accent"></div>
+      <div class="panel-inner">
+        <div class="s-tag">Transition</div>
+        <h2>Between one state<br>and another</h2>
+        <p>A threshold where movement becomes legible, where intention
+           meets form in the space between depths and surface.</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="label">Discipline</div>
+            <div class="value">Visual Design</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Focus</div>
+            <div class="value">System + Language</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Phase</div>
+            <div class="value">Definition</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Duration</div>
+            <div class="value">6 -- 8 Weeks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER 2: #3362ae - departs LEFT -->
+    <div class="wave-layer" id="l2" style="z-index:3">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="f2" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.004 0.005"
+              numOctaves="2" seed="7" result="n">
+              <animate attributeName="baseFrequency"
+                values="0.003 0.004; 0.005 0.006; 0.004 0.005; 0.003 0.004"
+                dur="14s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"/>
+            </feTurbulence>
+            <feDisplacementMap id="d2" in="SourceGraphic" in2="n"
+              scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <path filter="url(#f2)" fill="#3362ae"
+          d="M1.23,591.35l53.34,16.25c53.44,16.15,160.13,48.65,266.92,52.16,
+             106.79,3.51,213.47-21.97,320.26-21.27s213.47,27.39,320.26,21.37
+             c106.79-6.02,213.47-44.74,320.26-61.79,106.79-17.05,213.47-12.44,
+             320.26,0,106.79,12.34,213.47,32.4,266.92,42.43l53.34,10.03V24.58H1.23v566.77Z"/>
+      </svg>
+    </div>
+
+    <!-- SECTION PANEL 3 -->
+    <div class="section-panel" id="sp3" style="z-index:3">
+      <div class="s-num">03</div>
+      <div class="s-accent"></div>
+      <div class="panel-inner">
+        <div class="s-tag">Expression</div>
+        <h2>Where energy meets<br>the open air</h2>
+        <p>The upper layers. The interplay of depth and refracted light
+           becoming unmistakably clear, alive with motion.</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="label">Discipline</div>
+            <div class="value">Digital Product</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Focus</div>
+            <div class="value">Interaction + Motion</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Phase</div>
+            <div class="value">Build</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Duration</div>
+            <div class="value">8 -- 12 Weeks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER 3: #547dbd - departs RIGHT -->
+    <div class="wave-layer" id="l3" style="z-index:4">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="f3" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.005 0.004"
+              numOctaves="2" seed="13" result="n">
+              <animate attributeName="baseFrequency"
+                values="0.004 0.003; 0.006 0.005; 0.005 0.004; 0.004 0.003"
+                dur="12s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"/>
+            </feTurbulence>
+            <feDisplacementMap id="d3" in="SourceGraphic" in2="n"
+              scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <path filter="url(#f3)" fill="#547dbd"
+          d="M1.23,524.21l53.34-5.72c53.44-5.62,160.13-17.05,266.92-19.06,
+             106.79-2.01,213.47,5.42,320.26-9.63,106.79-15.05,213.47-52.56,
+             320.26-59.18,106.79-6.72,213.47,17.35,320.26,20.66,
+             106.79,3.41,213.47-14.04,320.26-15.85,106.79-1.81,213.47,11.84,
+             266.92,18.76l53.34,6.82V16.63H1.23v507.58Z"/>
+      </svg>
+    </div>
+
+    <!-- SECTION PANEL 4 -->
+    <div class="section-panel" id="sp4" style="z-index:4">
+      <div class="s-num">04</div>
+      <div class="s-accent"></div>
+      <div class="panel-inner">
+        <div class="s-tag">Arrival</div>
+        <h2>The crest<br>of it all</h2>
+        <p>Where the journey finally resolves. Everything revealed in
+           full relief at the surface, luminous and complete.</p>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="label">Discipline</div>
+            <div class="value">Launch + Growth</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Focus</div>
+            <div class="value">Scale + Iterate</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Phase</div>
+            <div class="value">Delivery</div>
+          </div>
+          <div class="detail-item">
+            <div class="label">Duration</div>
+            <div class="value">Ongoing</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAYER 4: lightest (#99b5d8) - departs UP -->
+    <div class="wave-layer" id="l4" style="z-index:5">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <filter id="f4" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.004 0.006"
+              numOctaves="2" seed="19" result="n">
+              <animate attributeName="baseFrequency"
+                values="0.003 0.005; 0.005 0.007; 0.004 0.006; 0.003 0.005"
+                dur="16s" repeatCount="indefinite" calcMode="spline"
+                keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"/>
+            </feTurbulence>
+            <feDisplacementMap id="d4" in="SourceGraphic" in2="n"
+              scale="5" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <path filter="url(#f4)" fill="#99b5d8"
+          d="M1.23,430.62l53.34-25.71c53.44-25.59,160.13-77.02,266.92-95.98,
+             106.79-18.96,213.47-5.45,320.26,11.49,106.79,16.94,213.47,37.56,
+             320.26,32.35,106.79-5.1,213.47-35.9,320.26-43.37,
+             106.79-7.58,213.47,8.29,320.26,31.16,106.79,22.87,213.47,52.97,
+             266.92,67.9l53.34,15.05V-4.24H1.23v434.86Z"/>
+      </svg>
+    </div>
+
+    <!-- HERO CONTENT -->
+    <div id="hero-content">
+      <p class="eyebrow">Four Movements -- 2026</p>
+      <h1>Between<br>the<br>Waves</h1>
+    </div>
+
+    <div id="scroll-hint">
+      <div class="hint-line"></div>
+      <span>Scroll</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer-section">
+  <div>
+    <p>You have moved through all four layers.
+       Each wave revealed a new phase of the process,
+       from the deepest foundations to the luminous surface.</p>
+    <a href="#" class="cta">Begin the journey</a>
+  </div>
+</div>
+
+<script>
+// ================================================================
+// PERF: All DOM refs cached once. Single rAF loop drives everything.
+// No per-frame DOM reads. Layout values cached on resize.
+// ================================================================
+
+// -- DOM refs (read once) --
+const cursorEl    = document.getElementById('cursor');
+const dispLabel   = document.getElementById('disp-label');
+const heroContent = document.getElementById('hero-content');
+const scrollHint  = document.getElementById('scroll-hint');
+const driver      = document.getElementById('scroll-driver');
+const navDots     = document.querySelectorAll('.ndot');
+
+const layerEls = [
+  document.getElementById('l1'),
+  document.getElementById('l2'),
+  document.getElementById('l3'),
+  document.getElementById('l4'),
+];
+
+const dispNodes = [
+  document.getElementById('d1'),
+  document.getElementById('d2'),
+  document.getElementById('d3'),
+  document.getElementById('d4'),
+];
+
+const panelEls = [
+  document.getElementById('sp1'),
+  document.getElementById('sp2'),
+  document.getElementById('sp3'),
+  document.getElementById('sp4'),
+];
+
+// Pre-query panel inners so we don't querySelector every frame
+const panelInners = panelEls.map(p => p.querySelector('.panel-inner'));
+
+// -- Cached layout values (updated on resize) --
+let vw = 0, vh = 0, maxScroll = 1;
+function cacheLayout() {
+  vw = window.innerWidth;
+  vh = window.innerHeight;
+  maxScroll = Math.max(1, driver.offsetHeight - vh);
+}
+cacheLayout();
+window.addEventListener('resize', cacheLayout);
+
+// -- Mouse state (written by event, read by rAF) --
+let mouseX = 0, mouseY = 0, mouseNY = 0;
+let mouseVisible = true;
+let cursorOnWave = false;
+
+// -- Displacement state --
+const WAVE_CY    = [0.685, 0.547, 0.485, 0.398];
+const BASE_SCALE = 5;
+const HOVER_ADD  = 30;
+const RADIUS     = 0.20;
+const LERP_SPEED = 0.06;
+
+const curScales = [BASE_SCALE, BASE_SCALE, BASE_SCALE, BASE_SCALE];
+const tgtScales = [BASE_SCALE, BASE_SCALE, BASE_SCALE, BASE_SCALE];
+
+// -- Scroll departure config --
+// Wider windows (each spans ~30% of scroll) with generous overlap for smooth transitions.
+// Front-to-back peel order: l4 (lightest) first, l1 (darkest) last.
+const DEPARTURES = [
+  { start: 0.60, end: 0.92, dx:  0, dy:  1 },  // l1 -> DOWN
+  { start: 0.40, end: 0.72, dx: -1, dy:  0 },  // l2 -> LEFT
+  { start: 0.20, end: 0.52, dx:  1, dy:  0 },  // l3 -> RIGHT
+  { start: 0.04, end: 0.36, dx:  0, dy: -1 },  // l4 -> UP
+];
+
+// Panel visibility windows -- wider hold periods so content lingers
+const PANEL_WINDOWS = [
+  { fadeIn: 0.56, fullIn: 0.66, fadeOut: 0.92, fullOut: 1.0  },  // sp1
+  { fadeIn: 0.36, fullIn: 0.46, fadeOut: 0.62, fullOut: 0.72 },  // sp2
+  { fadeIn: 0.16, fullIn: 0.26, fadeOut: 0.42, fullOut: 0.52 },  // sp3
+  { fadeIn: 0.02, fullIn: 0.12, fadeOut: 0.24, fullOut: 0.36 },  // sp4
+];
+
+// -- Previous frame state for dirty-checking (skip writes when unchanged) --
+let prevNavState  = -1;
+const prevLayerT  = [-1, -1, -1, -1];
+const prevPanelO  = [-1, -1, -1, -1];
+let prevHeroO     = -1;
+
+// -- Mask string cache (avoid rebuilding identical strings) --
+const maskCache = ['', '', '', ''];
+
+// ================================================================
+// EASING: quintic ease-in-out -- softer and more gradual than cubic
+// ================================================================
+function ease(t) {
+  if (t < 0.5) {
+    return 16 * t * t * t * t * t;
+  }
+  const p = -2 * t + 2;
+  return 1 - (p * p * p * p * p) / 2;
+}
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+// ================================================================
+// MASK BUILDER -- trailing-edge fade gradient
+// Only rebuilds the string when fadeSize changes meaningfully (>0.5%)
+// ================================================================
+function updateMask(i, dx, dy, raw) {
+  if (raw <= 0.001) {
+    if (maskCache[i] !== 'none') {
+      maskCache[i] = 'none';
+      layerEls[i].style.maskImage = 'none';
+      layerEls[i].style.webkitMaskImage = 'none';
+    }
+    return;
+  }
+
+  const fadeSize = 12 + raw * 40; // 12% to 52%
+  // Quantize to 0.5% steps to avoid thrashing
+  const q = Math.round(fadeSize * 2) / 2;
+  const key = `${dx},${dy},${q}`;
+  if (maskCache[i] === key) return;
+  maskCache[i] = key;
+
+  const solid = (100 - q).toFixed(1);
+  let dir;
+  if      (dy === -1) dir = 'to bottom';
+  else if (dy ===  1) dir = 'to top';
+  else if (dx ===  1) dir = 'to left';
+  else                dir = 'to right';
+
+  const grad = `linear-gradient(${dir}, black 0%, black ${solid}%, transparent 100%)`;
+  layerEls[i].style.maskImage = grad;
+  layerEls[i].style.webkitMaskImage = grad;
+}
+
+// ================================================================
+// SINGLE EVENT LISTENER for mousemove (merged cursor + displacement)
+// ================================================================
+document.addEventListener('mousemove', e => {
+  mouseX  = e.clientX;
+  mouseY  = e.clientY;
+  mouseNY = e.clientY / vh;
+}, { passive: true });
+
+document.addEventListener('mouseleave', () => {
+  mouseVisible = false;
+  for (let i = 0; i < 4; i++) tgtScales[i] = BASE_SCALE;
+}, { passive: true });
+
+document.addEventListener('mouseenter', () => {
+  mouseVisible = true;
+}, { passive: true });
+
+// ================================================================
+// SINGLE rAF LOOP -- all animations batched here
+// ================================================================
+(function frame() {
+  requestAnimationFrame(frame);
+
+  // -- 1. Cursor position (GPU transform, no layout trigger) --
+  cursorEl.style.left = mouseX + 'px';
+  cursorEl.style.top  = mouseY + 'px';
+  cursorEl.style.opacity = mouseVisible ? '1' : '0';
+
+  // -- 2. Displacement hover targets --
+  const inHero = window.scrollY < vh * 0.8;
+  let maxProx = 0;
+
+  for (let i = 0; i < 4; i++) {
+    if (inHero && mouseVisible) {
+      const dist = Math.abs(mouseNY - WAVE_CY[i]);
+      const prox = Math.max(0, 1 - dist / RADIUS);
+      tgtScales[i] = BASE_SCALE + prox * HOVER_ADD;
+      if (prox > maxProx) maxProx = prox;
+    } else {
+      tgtScales[i] = BASE_SCALE;
+    }
+  }
+
+  // Cursor class toggle (only touch DOM if changed)
+  const shouldGlow = maxProx > 0.3;
+  if (shouldGlow !== cursorOnWave) {
+    cursorOnWave = shouldGlow;
+    cursorEl.classList.toggle('on-wave', shouldGlow);
+    dispLabel.classList.toggle('visible', shouldGlow);
+  }
+
+  // -- 3. Lerp displacement scales toward targets --
+  for (let i = 0; i < 4; i++) {
+    curScales[i] += (tgtScales[i] - curScales[i]) * LERP_SPEED;
+    if (dispNodes[i]) {
+      // Only write if changed by more than 0.05
+      const rounded = (curScales[i] * 20 | 0) / 20; // quantize to 0.05
+      dispNodes[i].setAttribute('scale', rounded);
+    }
+  }
+
+  // -- 4. Scroll-driven animations --
+  const scrollY = window.scrollY;
+  const prog = clamp(scrollY / maxScroll, 0, 1);
+
+  // Hero content fade (over first ~7% of scroll for a gentler fade)
+  const heroO = Math.round((1 - ease(clamp(prog / 0.07, 0, 1))) * 1000) / 1000;
+  if (heroO !== prevHeroO) {
+    prevHeroO = heroO;
+    heroContent.style.opacity = heroO;
+    scrollHint.style.opacity  = heroO;
+  }
+
+  // Wave layer departures
+  for (let i = 0; i < 4; i++) {
+    const dep = DEPARTURES[i];
+    const raw = clamp((prog - dep.start) / (dep.end - dep.start), 0, 1);
+    const t   = ease(raw);
+
+    // Quantize t to avoid sub-pixel thrashing (256 steps)
+    const qt = (t * 256 | 0) / 256;
+    if (qt === prevLayerT[i]) continue;
+    prevLayerT[i] = qt;
+
+    const offX = dep.dx * qt * 1.15 * vw;
+    const offY = dep.dy * qt * 1.15 * vh;
+
+    layerEls[i].style.transform = `translate3d(${offX | 0}px, ${offY | 0}px, 0)`;
+    layerEls[i].style.opacity   = 1 - qt * 0.3;
+
+    // Soft trailing-edge mask
+    updateMask(i, dep.dx, dep.dy, raw);
+  }
+
+  // Panel reveal
+  for (let i = 0; i < 4; i++) {
+    const pw = PANEL_WINDOWS[i];
+    let o = 0;
+    if      (prog < pw.fadeIn)  o = 0;
+    else if (prog < pw.fullIn)  o = (prog - pw.fadeIn) / (pw.fullIn - pw.fadeIn);
+    else if (prog < pw.fadeOut) o = 1;
+    else if (prog < pw.fullOut) o = 1 - (prog - pw.fadeOut) / (pw.fullOut - pw.fadeOut);
+
+    // Quantize to 100 steps
+    const qo = (clamp(o, 0, 1) * 100 | 0) / 100;
+    if (qo === prevPanelO[i]) continue;
+    prevPanelO[i] = qo;
+
+    panelEls[i].style.opacity = qo;
+    panelEls[i].classList.toggle('visible', qo > 0.05);
+
+    if (panelInners[i]) {
+      const slide = (1 - qo) * 30;
+      panelInners[i].style.transform = `translate3d(0, ${slide | 0}px, 0)`;
+    }
+  }
+
+  // Nav dots
+  const state = Math.round(prog * 4);
+  if (state !== prevNavState) {
+    prevNavState = state;
+    for (let i = 0; i < navDots.length; i++) {
+      navDots[i].classList.toggle('active', i === state);
+    }
+  }
+})();
+</script>
+</body>
+</html>

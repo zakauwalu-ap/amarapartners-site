@@ -1,26 +1,103 @@
+/* src/app/globals.css
+   ============================================================
+   Amara & Partners -- Global Styles (Tailwind CSS v4)
+
+   In Tailwind v4, brand tokens are defined here inside @theme
+   instead of in tailwind.config.ts. This is the single source
+   of truth for all colors, fonts, spacing, etc.
+   ============================================================ */
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* -----------------------------------------------------------
+   THEME TOKENS
+   These become Tailwind utility classes automatically.
+   e.g. --color-wave-400 → bg-wave-400, text-wave-400, etc.
+       --font-heading    → font-heading
+   ----------------------------------------------------------- */
+@theme {
+  /* --- Wave Color System --- */
+  --color-wave-100: #B8CCDE;
+  --color-wave-200: #7BA3C9;
+  --color-wave-300: #4A7DB5;
+  --color-wave-400: #2B5F9E;
+  --color-wave-500: #1A4380;
+  --color-wave-600: #0D2E5C;
+  --color-wave-700: #091D3A;
+
+  /* --- Accent & Neutrals --- */
+  --color-gold:         #C9A84C;
+  --color-cream:        #F5F0E8;
+  --color-brand-blue:   #496BB3;
+  --color-brand-gold:   #DBCDAE;
+  --color-charcoal:     #1E242D;
+  --color-shadow-grey:  #565E71;
+  --color-light-grey:   #E2E3E4;
+
+  /* --- Typography --- */
+  --font-heading: var(--font-heading-var), Georgia, serif;
+  --font-body:    var(--font-body-var), system-ui, sans-serif;
+
+  /* --- Display Font Sizes --- */
+  --text-display-2xl: clamp(3.5rem, 8vw, 6rem);
+  --text-display-xl:  clamp(2.75rem, 6vw, 4.5rem);
+  --text-display-lg:  clamp(2.25rem, 4vw, 3.5rem);
+  --text-display-md:  clamp(1.75rem, 3vw, 2.5rem);
+
+  /* --- Body Font Sizes --- */
+  --text-body-xl: 1.25rem;
+  --text-body-lg: 1.125rem;
+  --text-body-md: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-body-xs: 0.75rem;
+
+  /* --- Spacing --- */
+  --spacing-section-sm: 4rem;
+  --spacing-section-md: 6rem;
+  --spacing-section-lg: 8rem;
+  --spacing-section-xl: 10rem;
+
+  /* --- Max Widths --- */
+  --width-content: 1200px;
+  --width-narrow:  720px;
+  --width-wide:    1440px;
+
+  /* --- Border Radius --- */
+  --radius-card:   0.75rem;
+  --radius-button: 0.375rem;
+
+  /* --- Shadows --- */
+  --shadow-card:      0 2px 8px 0 rgba(9,29,58,0.08), 0 1px 2px 0 rgba(9,29,58,0.04);
+  --shadow-card-hover: 0 12px 32px 0 rgba(9,29,58,0.14), 0 4px 8px 0 rgba(9,29,58,0.06);
+  --shadow-gold-glow: 0 4px 20px 0 rgba(201,168,76,0.35);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* -----------------------------------------------------------
+   BASE STYLES (default <body> look — no duplicate utilities on <body>)
+   ----------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    color: var(--color-charcoal);
+    background-color: var(--color-cream);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }

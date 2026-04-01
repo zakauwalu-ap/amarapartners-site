@@ -12,6 +12,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/layout/Navigation";
+import { Footer } from "@/components/layout/Footer";
 
 // -----------------------------------------------------------
 // FONT SETUP
@@ -75,6 +76,7 @@ export default function RootLayout({
       <body>
         <Navigation />
         {children}
+        <Footer />
       </body>
     </html>
   );

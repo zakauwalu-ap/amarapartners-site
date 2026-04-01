@@ -8,6 +8,11 @@ import { WAVE_PATHS } from "@/lib/wavePaths";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { WaveLayer } from "@/components/waves/WaveLayer";
+import { FirmIntro } from "@/components/sections/FirmIntro";
+import { PillarCards } from "@/components/sections/PillarCards";
+import { FeaturedInsights } from "@/components/sections/FeaturedInsights";
+import { JurisdictionalReach } from "@/components/sections/JurisdictionalReach";
+import { CTAContact } from "@/components/sections/CTAContact";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -125,7 +130,6 @@ export interface WaveSystemProps {
 export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [finePointer, setFinePointer] = useState(false);
-  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
 
   const driverRef = useRef<HTMLDivElement | null>(null);
   const heroContentRef = useRef<HTMLDivElement | null>(null);
@@ -141,6 +145,8 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const prevHeroO = useRef<number>(-1);
   const prevNavState = useRef<number>(-1);
   const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // One ref per content panel (zones 1–5: FirmIntro, PillarCards, Insights, Jurisdictions, CTA)
+  const sectionPanelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const curScales = useRef<number[]>([]);
   const tgtScales = useRef<number[]>([]);
@@ -186,6 +192,10 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   const setDotRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
     dotRefs.current[i] = el;
+  }, []);
+
+  const setPanelRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
+    sectionPanelRefs.current[i] = el;
   }, []);
 
   useEffect(() => {
@@ -288,12 +298,39 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
         const state = Math.round(prog * (SECTION_COUNT - 1));
         if (state !== prevNavState.current) {
           prevNavState.current = state;
-          setActiveSectionIndex(state);
           for (let idx = 0; idx < SECTION_COUNT; idx++) {
             dotRefs.current[idx]?.classList.toggle(
               "wave-nav-dot-active",
               idx === state
             );
+          }
+        }
+
+        // ── Section content panel opacity ──────────────────────────
+        // ZONE_STEP = 1/(SECTION_COUNT-1). Each panel j maps to zone z=j+1.
+        // Panels fade in/out smoothly around their zone centre.
+        // The last panel (CTA, j=4) has no fade-out — stays visible to end.
+        const ZONE_STEP = 1 / (SECTION_COUNT - 1);
+        const PANEL_COUNT = 5;
+        for (let j = 0; j < PANEL_COUNT; j++) {
+          const z = j + 1;
+          const fadeInStart = (z - 0.6) * ZONE_STEP;
+          const center      = z * ZONE_STEP;
+          const fadeOutEnd  = (z + 0.5) * ZONE_STEP;
+
+          const fadeIn  = clamp((prog - fadeInStart) / (center - fadeInStart), 0, 1);
+          const fadeOut = j < PANEL_COUNT - 1
+            ? clamp(1 - (prog - center) / (fadeOutEnd - center), 0, 1)
+            : 1;
+          const opacity = Math.min(fadeIn, fadeOut);
+          // Quantise to 1/256 steps to avoid unnecessary repaints
+          const qOpacity = (Math.round(opacity * 256) | 0) / 256;
+
+          const el = sectionPanelRefs.current[j];
+          if (el) {
+            el.style.opacity = String(qOpacity);
+            // Only allow pointer interaction when the panel is substantially visible
+            el.style.pointerEvents = qOpacity > 0.5 ? "auto" : "none";
           }
         }
       },
@@ -488,6 +525,52 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             />
           ))}
 
+          {/* ── Section content panels (zones 1–5) ─────────────────────
+               Each panel occupies the full sticky viewport at z-20, sitting
+               above all wave layers (z-2 to z-8) but below the hero logo (z-30).
+               Opacity and pointer-events are driven by the scroll handler.   */}
+
+          <div
+            ref={setPanelRef(0)}
+            style={{ opacity: 0, pointerEvents: "none" }}
+            className="absolute inset-0 z-20 overflow-hidden bg-cream"
+          >
+            <FirmIntro />
+          </div>
+
+          <div
+            ref={setPanelRef(1)}
+            style={{ opacity: 0, pointerEvents: "none" }}
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
+          >
+            <PillarCards />
+          </div>
+
+          <div
+            ref={setPanelRef(2)}
+            style={{ opacity: 0, pointerEvents: "none" }}
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-500"
+          >
+            <FeaturedInsights />
+          </div>
+
+          <div
+            ref={setPanelRef(3)}
+            style={{ opacity: 0, pointerEvents: "none" }}
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-600"
+          >
+            <JurisdictionalReach />
+          </div>
+
+          <div
+            ref={setPanelRef(4)}
+            style={{ opacity: 0, pointerEvents: "none" }}
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
+          >
+            <CTAContact />
+          </div>
+
+          {/* ── Hero content (logo + eyebrow) — fades out early in scroll ── */}
           <div
             ref={heroContentRef}
             className="pointer-events-none absolute inset-0 z-30 flex flex-col px-[8vw] pb-[9vh] pt-[7vh]"
@@ -507,20 +590,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 {eyebrow}
               </p>
             </div>
-          </div>
-
-          {/* Persistent section label (not faded with hero copy). */}
-          <div className="pointer-events-none absolute inset-x-[8vw] top-[calc(4rem+1.25rem)] z-30">
-            <p
-              className={cn(
-                "inline-block rounded-card px-4 py-2 font-body text-body-sm font-semibold uppercase tracking-[0.28em]",
-                activeSectionIndex >= 3
-                  ? "bg-wave-700/35 text-wave-100"
-                  : "bg-wave-700/15 text-wave-700/90"
-              )}
-            >
-              {SECTION_TITLES[activeSectionIndex]}
-            </p>
           </div>
 
           <div

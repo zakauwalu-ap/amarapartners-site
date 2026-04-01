@@ -25,6 +25,8 @@ const BASE_SCALE = 5;
 const HOVER_ADD = 30;
 const RADIUS = 0.2;
 const LERP_SPEED = 0.06;
+const ENABLE_WAVE_INTERACTION = false;
+const ENABLE_WAVE_UNDULATION = false;
 
 const DIRECTION_PATTERN: readonly { dx: number; dy: number }[] = [
   { dx: 0, dy: 1 },
@@ -36,7 +38,6 @@ const DIRECTION_PATTERN: readonly { dx: number; dy: number }[] = [
   { dx: 0, dy: 1 },
 ];
 
-const BASE_LAYER_Y_OFFSETS = [260, 230, 200, 170, 145, 120, 95] as const;
 
 const PANEL_WINDOWS: readonly {
   fadeIn: number;
@@ -222,7 +223,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   }, []);
 
   const enableCustomCursor =
-    !prefersReducedMotion && finePointer;
+    ENABLE_WAVE_INTERACTION && !prefersReducedMotion && finePointer;
 
   function updateMask(
     i: number,
@@ -300,8 +301,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           const layerEl = layerRefs.current[i];
           if (layerEl) {
             const offX = dep.dx * qt * 1.15 * vw;
-            const baseY = BASE_LAYER_Y_OFFSETS[i] ?? 95;
-            const offY = baseY + dep.dy * qt * 1.15 * vh;
+            const offY = dep.dy * qt * 1.15 * vh;
             layerEl.style.transform = `translate3d(${offX | 0}px, ${offY | 0}px, 0)`;
             layerEl.style.opacity = String(1 - qt * 0.3);
             updateMask(i, dep.dx, dep.dy, raw, layerEl);
@@ -415,7 +415,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   }, [prefersReducedMotion, enableCustomCursor, waveCount]);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || !ENABLE_WAVE_INTERACTION) return;
 
     const onMove = (e: MouseEvent) => {
       mouseX.current = e.clientX;
@@ -445,7 +445,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     };
   }, [prefersReducedMotion, waveCount]);
 
-  if (prefersReducedMotion) {
+    if (prefersReducedMotion) {
     return (
       <section
         className="relative min-h-screen overflow-hidden bg-wave-100"
@@ -539,7 +539,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               turbulenceSeed={TURBULENCE_CFG[i].seed}
               turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
               turbulenceDurationSec={TURBULENCE_CFG[i].dur}
-              animateTurbulence
+              animateTurbulence={ENABLE_WAVE_UNDULATION}
             />
           ))}
 

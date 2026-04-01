@@ -19,6 +19,8 @@ export interface WaveLayerProps {
   displacementRef?: Ref<SVGFEDisplacementMapElement | null>;
   /** Outer wrapper (receives scroll-driven transform). */
   layerRef?: Ref<HTMLDivElement | null>;
+  /** Static vertical offset for the SVG path, in viewBox units. */
+  pathOffsetY?: number;
 }
 
 export const WaveLayer = ({
@@ -31,6 +33,7 @@ export const WaveLayer = ({
   animateTurbulence,
   displacementRef,
   layerRef,
+  pathOffsetY = 0,
 }: WaveLayerProps) => {
   const rid = useId().replace(/:/g, "");
   const filterId = `wave-f-${rid}`;
@@ -84,7 +87,12 @@ export const WaveLayer = ({
             />
           </filter>
         </defs>
-        <path filter={`url(#${filterId})`} fill={fillHex} d={pathD} />
+        <path
+          filter={`url(#${filterId})`}
+          fill={fillHex}
+          d={pathD}
+          transform={`translate(0 ${pathOffsetY})`}
+        />
       </svg>
     </div>
   );

@@ -4,12 +4,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { waveSectionPanels } from "@/data/waveSections";
 import { WAVE_PATHS } from "@/lib/wavePaths";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { WaveLayer } from "@/components/waves/WaveLayer";
-import { WaveSectionPanel } from "@/components/waves/WaveSectionPanel";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -27,6 +25,7 @@ const RADIUS = 0.2;
 const LERP_SPEED = 0.06;
 const ENABLE_WAVE_INTERACTION = false;
 const ENABLE_WAVE_UNDULATION = false;
+const WAVE_PATH_OFFSET_Y = 60;
 
 const DIRECTION_PATTERN: readonly { dx: number; dy: number }[] = [
   { dx: 0, dy: 1 },
@@ -39,17 +38,6 @@ const DIRECTION_PATTERN: readonly { dx: number; dy: number }[] = [
 ];
 
 
-const PANEL_WINDOWS: readonly {
-  fadeIn: number;
-  fullIn: number;
-  fadeOut: number;
-  fullOut: number;
-}[] = [
-  { fadeIn: 0.56, fullIn: 0.66, fadeOut: 0.92, fullOut: 1.0 },
-  { fadeIn: 0.36, fullIn: 0.46, fadeOut: 0.62, fullOut: 0.72 },
-  { fadeIn: 0.16, fullIn: 0.26, fadeOut: 0.42, fullOut: 0.52 },
-  { fadeIn: 0.02, fullIn: 0.12, fadeOut: 0.24, fullOut: 0.36 },
-];
 
 const TURBULENCE_CFG = [
   {
@@ -105,16 +93,18 @@ const WAVE_FILLS = [
   "#7BA3C9",
   "#B8CCDE",
 ] as const;
+const SECTION_TITLES = [
+  "Hero",
+  "Firm Introduction",
+  "Practice Pillars",
+  "Featured Insights",
+  "Jurisdictional Reach",
+  "CTA / Contact",
+  "Footer",
+] as const;
 
 /** Primary grey lockup — viewBox 252×144 in source SVG. */
 const HERO_LOGO_SRC = "/images/logo/A&P_logo_grey_primary_RGB.svg";
-
-const PANEL_ACCENTS: { num: string; bar: string }[] = [
-  { num: "text-wave-500", bar: "bg-wave-500" },
-  { num: "text-wave-400", bar: "bg-wave-400" },
-  { num: "text-wave-300", bar: "bg-wave-300" },
-  { num: "text-wave-200", bar: "bg-wave-200" },
-];
 
 function ease(t: number): number {
   if (t < 0.5) {
@@ -135,6 +125,7 @@ export interface WaveSystemProps {
 export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [finePointer, setFinePointer] = useState(false);
+  const [activeSectionIndex, setActiveSectionIndex] = useState(0);
 
   const driverRef = useRef<HTMLDivElement | null>(null);
   const heroContentRef = useRef<HTMLDivElement | null>(null);
@@ -144,12 +135,9 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dispMapRefs = useRef<(SVGFEDisplacementMapElement | null)[]>([]);
-  const panelRootRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const panelInnerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const maskCache = useRef<string[]>([]);
   const prevLayerT = useRef<number[]>([]);
-  const prevPanelO = useRef<number[]>([-1, -1, -1, -1]);
   const prevHeroO = useRef<number>(-1);
   const prevNavState = useRef<number>(-1);
   const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -161,8 +149,8 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const departures = useMemo(() => {
     return Array.from({ length: waveCount }, (_, i) => {
       const rev = waveCount - 1 - i;
-      const start = 0.03 + rev * 0.095;
-      const end = Math.min(start + 0.3, 0.98);
+      const start = 0.04 + rev * 0.105;
+      const end = Math.min(start + 0.24, 0.99);
       return {
         start,
         end,
@@ -192,20 +180,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const setDispRef = useCallback(
     (i: number) => (el: SVGFEDisplacementMapElement | null) => {
       dispMapRefs.current[i] = el;
-    },
-    []
-  );
-
-  const setPanelRootRef = useCallback(
-    (i: number) => (el: HTMLDivElement | null) => {
-      panelRootRefs.current[i] = el;
-    },
-    []
-  );
-
-  const setPanelInnerRef = useCallback(
-    (i: number) => (el: HTMLDivElement | null) => {
-      panelInnerRefs.current[i] = el;
     },
     []
   );
@@ -295,49 +269,26 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           const raw = clamp((prog - dep.start) / (dep.end - dep.start), 0, 1);
           const t = ease(raw);
           const qt = ((t * 256) | 0) / 256;
-          if (qt === prevLayerT.current[i]) continue;
-          prevLayerT.current[i] = qt;
-
           const layerEl = layerRefs.current[i];
-          if (layerEl) {
+          if (!layerEl) continue;
+
+          // Always update mask even when transform quantization doesn't change,
+          // otherwise stale mask gradients can leave a visible seam near nav.
+          updateMask(i, dep.dx, dep.dy, raw, layerEl);
+
+          if (qt !== prevLayerT.current[i]) {
+            prevLayerT.current[i] = qt;
             const offX = dep.dx * qt * 1.15 * vw;
             const offY = dep.dy * qt * 1.15 * vh;
             layerEl.style.transform = `translate3d(${offX | 0}px, ${offY | 0}px, 0)`;
             layerEl.style.opacity = String(1 - qt * 0.3);
-            updateMask(i, dep.dx, dep.dy, raw, layerEl);
-          }
-        }
-
-        for (let i = 0; i < 4; i++) {
-          const pw = PANEL_WINDOWS[i];
-          let o = 0;
-          if (prog < pw.fadeIn) o = 0;
-          else if (prog < pw.fullIn) o = (prog - pw.fadeIn) / (pw.fullIn - pw.fadeIn);
-          else if (prog < pw.fadeOut) o = 1;
-          else if (prog < pw.fullOut)
-            o = 1 - (prog - pw.fadeOut) / (pw.fullOut - pw.fadeOut);
-          else o = 0;
-
-          const qo = (clamp(o, 0, 1) * 100) | 0;
-          const qoNorm = qo / 100;
-          if (qoNorm === prevPanelO.current[i]) continue;
-          prevPanelO.current[i] = qoNorm;
-
-          const root = panelRootRefs.current[i];
-          const inner = panelInnerRefs.current[i];
-          if (root) {
-            root.style.opacity = String(qoNorm);
-            root.style.pointerEvents = qoNorm > 0.05 ? "auto" : "none";
-          }
-          if (inner) {
-            const slide = (1 - qoNorm) * 30;
-            inner.style.transform = `translate3d(0, ${slide | 0}px, 0)`;
           }
         }
 
         const state = Math.round(prog * (SECTION_COUNT - 1));
         if (state !== prevNavState.current) {
           prevNavState.current = state;
+          setActiveSectionIndex(state);
           for (let idx = 0; idx < SECTION_COUNT; idx++) {
             dotRefs.current[idx]?.classList.toggle(
               "wave-nav-dot-active",
@@ -471,9 +422,15 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
             turbulenceDurationSec={TURBULENCE_CFG[i].dur}
             animateTurbulence={false}
+            pathOffsetY={WAVE_PATH_OFFSET_Y}
           />
         ))}
         <div className="relative z-30 flex min-h-screen flex-col px-[8vw] pb-[9vh] pt-[7vh]">
+          <div className="mb-3">
+            <p className="font-body text-body-sm font-semibold uppercase tracking-[0.28em] text-wave-700/80">
+              {SECTION_TITLES[0]}
+            </p>
+          </div>
           <div className="flex shrink-0 justify-center">
             <Image
               src={HERO_LOGO_SRC}
@@ -481,7 +438,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               width={252}
               height={144}
               priority
-              className="h-auto w-[min(56vw,280px)] max-w-full"
+              className="h-auto w-[min(72vw,420px)] max-w-full"
             />
           </div>
           <div className="flex min-h-0 flex-1 flex-col justify-end">
@@ -496,7 +453,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   return (
     <>
-      <div ref={driverRef} className="relative h-[700vh]" data-wave-scroll-driver>
+      <div ref={driverRef} className="relative h-[780vh]" data-wave-scroll-driver>
         <div
           className={cn(
             "sticky top-0 h-screen overflow-hidden",
@@ -515,19 +472,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             </svg>
           </div>
 
-          {waveSectionPanels.map((panel, i) => (
-            <WaveSectionPanel
-              key={panel.id}
-              panel={panel}
-              indexOneBased={i + 1}
-              zIndex={i + 1}
-              accentNumberClass={PANEL_ACCENTS[i].num}
-              accentBarClass={PANEL_ACCENTS[i].bar}
-              rootRef={setPanelRootRef(i)}
-              innerRef={setPanelInnerRef(i)}
-            />
-          ))}
-
           {WAVE_PATHS.map((pathD, i) => (
             <WaveLayer
               key={`wave-layer-${WAVE_FILLS[i]}`}
@@ -540,6 +484,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
               turbulenceDurationSec={TURBULENCE_CFG[i].dur}
               animateTurbulence={ENABLE_WAVE_UNDULATION}
+              pathOffsetY={WAVE_PATH_OFFSET_Y}
             />
           ))}
 
@@ -554,7 +499,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 width={252}
                 height={144}
                 priority
-                className="h-auto w-[min(56vw,280px)] max-w-full"
+                className="h-auto w-[min(72vw,420px)] max-w-full"
               />
             </div>
             <div className="flex min-h-0 flex-1 flex-col justify-end">
@@ -562,6 +507,20 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 {eyebrow}
               </p>
             </div>
+          </div>
+
+          {/* Persistent section label (not faded with hero copy). */}
+          <div className="pointer-events-none absolute inset-x-[8vw] top-[calc(4rem+1.25rem)] z-30">
+            <p
+              className={cn(
+                "inline-block rounded-card px-4 py-2 font-body text-body-sm font-semibold uppercase tracking-[0.28em]",
+                activeSectionIndex >= 3
+                  ? "bg-wave-700/35 text-wave-100"
+                  : "bg-wave-700/15 text-wave-700/90"
+              )}
+            >
+              {SECTION_TITLES[activeSectionIndex]}
+            </p>
           </div>
 
           <div

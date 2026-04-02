@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (Phase 4 complete + scroll polish + section transition redesign)
+> **Last updated:** 2 April 2026 (wave panels semi-transparent + driver height reduced to 700vh)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -189,9 +189,11 @@ Architecture decision: sections restored inside the sticky viewport, but the tra
 - Old transitions (Phase 4): pure opacity crossfade (0→1→0). Structurally identical to a slideshow.
 - New transitions: **combined translateY + opacity** — each panel slides up from +60px on entry, holds fully visible for ~80vh, then exits by continuing upward –30px. The directional motion gives the user a physical sense of scrolling through layered space rather than clicking Next.
 - Content begins appearing at ~60vh from the top of the driver (10% in) — users see information within the first screen of scrolling.
-- Driver height: `700vh` → `1000vh` to accommodate the hold windows and full wave peel sequence.
+- Driver height: `700vh` → `1000vh` to accommodate hold windows — later revised back to `700vh` after user feedback that the end sections (CTA + footer approach) felt excessively long.
 - `page.tsx` reverted to `<Hero />` only; section components reverted to `h-full`.
 - `PANEL_ENTER_Y = 60px`, `PANEL_EXIT_Y = -30px`, flat-top dwell curve retained from earlier work.
+- Panel backgrounds changed to semi-transparent + `backdrop-blur` (e.g. `bg-cream/80 backdrop-blur-xl`) so wave layers remain partially visible beneath each content panel, reinforcing the depth-layering concept rather than covering waves completely.
+- Driver reduced from `1000vh` → `700vh` to eliminate excessive dead scroll at the CTA and before the footer.
 
 ---
 

@@ -499,7 +499,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   return (
     <>
-      <div ref={driverRef} className="relative h-[1000vh]" data-wave-scroll-driver>
+      <div ref={driverRef} className="relative h-[700vh]" data-wave-scroll-driver>
         <div
           className={cn(
             "sticky top-0 h-screen overflow-hidden",
@@ -543,7 +543,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           <div
             ref={setPanelRef(0)}
             style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-cream"
+            className="absolute inset-0 z-20 overflow-hidden bg-cream/80 backdrop-blur-xl"
           >
             <FirmIntro />
           </div>
@@ -551,7 +551,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           <div
             ref={setPanelRef(1)}
             style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-700/80 backdrop-blur-lg"
           >
             <PillarCards />
           </div>
@@ -559,7 +559,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           <div
             ref={setPanelRef(2)}
             style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-500"
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-500/78 backdrop-blur-lg"
           >
             <FeaturedInsights />
           </div>
@@ -567,7 +567,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           <div
             ref={setPanelRef(3)}
             style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-600"
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-600/80 backdrop-blur-lg"
           >
             <JurisdictionalReach />
           </div>
@@ -575,7 +575,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           <div
             ref={setPanelRef(4)}
             style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
+            className="absolute inset-0 z-20 overflow-hidden bg-wave-700/80 backdrop-blur-lg"
           >
             <CTAContact />
           </div>

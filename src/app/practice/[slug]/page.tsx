@@ -3,6 +3,7 @@
 // =============================================================================
 // Practice pillar detail page — /practice/[slug]
 // Valid slugs: corporate | disputes | regulatory
+// Each area card links to /practice/[slug]/[areaSlug] (22 static area pages).
 //
 // Structure:
 //   1. PageHeader        — pillar name, tagline as subtitle, dark gradient
@@ -17,6 +18,7 @@
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Button } from "@/components/ui/Button";
@@ -62,34 +64,59 @@ export async function generateMetadata({
 // style from the About page for visual consistency across inner pages.
 
 function AreaCard({
+  pillarSlug,
   area,
   index,
 }: {
+  pillarSlug: string;
   area: PracticeAreaDetail;
   index: number;
 }) {
   const ordinal = String(index + 1).padStart(2, "0");
 
   return (
-    <div className="flex h-full flex-col gap-5 rounded-card border border-wave-600 bg-wave-600/40 p-8 backdrop-blur-sm">
-      {/* Ordinal number — decorative, very low contrast */}
-      <span
-        className="select-none font-heading text-display-md leading-none text-brand-gold/20 tabular-nums"
-        aria-hidden="true"
-      >
-        {ordinal}
-      </span>
+    <Link
+      href={`/practice/${pillarSlug}/${area.slug}`}
+      className="group block h-full"
+      aria-label={`Read more about ${area.name}`}
+    >
+      <article className="flex h-full flex-col gap-5 rounded-card border border-wave-600 bg-wave-600/40 p-8 backdrop-blur-sm transition-all duration-300 hover:border-brand-gold/30 hover:bg-wave-600/55 hover:shadow-card-hover">
+        <span
+          className="select-none font-heading text-display-md leading-none text-brand-gold/20 tabular-nums transition-colors duration-300 group-hover:text-brand-gold/30"
+          aria-hidden="true"
+        >
+          {ordinal}
+        </span>
 
-      <div className="h-px w-10 bg-brand-gold/50" aria-hidden="true" />
+        <div className="h-px w-10 bg-brand-gold/50 transition-all duration-300 group-hover:w-12" aria-hidden="true" />
 
-      <h3 className="font-heading text-body-xl leading-tight text-wave-100">
-        {area.name}
-      </h3>
+        <h3 className="font-heading text-body-xl leading-tight text-wave-100 transition-colors duration-200 group-hover:text-cream">
+          {area.name}
+        </h3>
 
-      <p className="font-body text-body-sm leading-relaxed text-wave-300/80">
-        {area.description}
-      </p>
-    </div>
+        <p className="font-body text-body-sm leading-relaxed text-wave-300/80">
+          {area.description}
+        </p>
+
+        <span className="mt-auto inline-flex items-center gap-2 font-body text-body-xs font-medium uppercase tracking-wider text-brand-gold/70 transition-all duration-200 group-hover:gap-3 group-hover:text-brand-gold">
+          View area
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </span>
+      </article>
+    </Link>
   );
 }
 
@@ -195,7 +222,7 @@ export default async function PillarPage({
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {pillar.areas.map((area, i) => (
               <AnimateIn key={area.slug} delay={(i % 3) * 0.08}>
-                <AreaCard area={area} index={i} />
+                <AreaCard pillarSlug={pillar.slug} area={area} index={i} />
               </AnimateIn>
             ))}
           </div>

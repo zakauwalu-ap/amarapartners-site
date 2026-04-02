@@ -1,8 +1,8 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (Phase 5 complete — all inner pages built; Phase 6 polish next)
+> **Last updated:** 3 April 2026 (Phase 5 complete — practice area detail pages, People, legal placeholders; Phase 6 polish next)
 > **Project:** Ground-up rebuild of amarapartners.ae
-> **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
+> **Stack:** Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion + Lenis
 > **Deployment:** Vercel (production), Dokploy (staging)
 
 ---
@@ -30,7 +30,7 @@ Amara & Partners Legal Consultants is a boutique firm based on Reem Island, Abu 
 
 ### Phase 1: Foundation (Complete)
 
-- [x] Next.js 15 scaffolded with App Router and TypeScript
+- [x] Next.js scaffolded with App Router and TypeScript (currently **v16** in `package.json`; treat as “latest App Router” in docs)
 - [x] Tailwind CSS v4 configured via `@theme` directive in `globals.css`
 - [x] PostCSS configured with `@tailwindcss/postcss`
 - [x] Full wave colour system defined (wave-100 through wave-700 + gold, cream, brand colours)
@@ -56,7 +56,7 @@ Amara & Partners Legal Consultants is a boutique firm based on Reem Island, Abu 
 ### Phase 3: Hero / Wave System (Complete)
 
 - [x] Seven SVG wave layers with feTurbulence filters
-- [x] GSAP ScrollTrigger driving a 780vh scroll driver with sticky viewport
+- [x] GSAP ScrollTrigger driving the home scroll driver (currently **700vh** after polish; sticky viewport)
 - [x] Waves peel away in alternating directions on scroll (up/down/left/right)
 - [x] Trailing-edge mask gradients for smooth layer departure
 - [x] Hero content (logo + eyebrow) fades out as scroll begins
@@ -79,24 +79,19 @@ Amara & Partners Legal Consultants is a boutique firm based on Reem Island, Abu 
 
 ## Current State Assessment
 
-Based on the video recording of the site as of 1 April 2026, here is what is working and what needs attention:
-
 **Working well:**
-- The wave system looks striking. The layered blue gradient with scroll-driven departure is the hero moment the brand needs.
-- Navigation is polished: transparent-to-solid transition, mega-menus, mobile overlay all functional.
+- Full **inner site IA** is live: practice (overview, 3 pillars, **22 individual area pages**), industries (5 sectors), insights, jurisdictions, about, contact, **privacy policy**, **terms of use**.
+- **Mega-menu and mobile menu** practice links resolve to `/practice/[pillar]/[area]` — all targets exist.
+- **Industries** “related practice” pills deep-link to those area pages (not only pillar landing pages).
+- **People** listing and five bio pages exist at `/people` and `/people/[slug]`; **no People link** in nav or footer (launch posture unchanged).
+- Home **wave hero** with Lenis-smooth scroll, semi-transparent content panels (translate + opacity), and global footer.
 - The bilingual primary logo renders cleanly in the hero.
-- Section label badge updates correctly as the user scrolls through zones.
-- Dot navigation on the right edge tracks scroll position.
 
-**Issues to address:**
-- ~~The wave sections (Firm Introduction through Footer) are empty.~~ **Resolved in Phase 4.**
-- ~~The page ends abruptly after the scroll driver. There is no footer, no CTA section.~~ **Resolved in Phase 4.**
-- ~~The section label badge feels like debug UI.~~ **Resolved — badge removed in Phase 4.**
-- ~~Section content panels had zero dwell time — each panel reached peak opacity and immediately faded out.~~ **Resolved — flat-top dwell curve added (2 Apr 2026).**
-- ~~Scroll was native/abrupt with no inertia.~~ **Resolved — Lenis smooth scroll integrated (2 Apr 2026).**
-- The nav still uses "Amara & Partners" as plain text rather than the SVG logo (noted as placeholder in code comments).
-- The wave turbulence animation (`ENABLE_WAVE_UNDULATION`) and pointer interaction (`ENABLE_WAVE_INTERACTION`) are both disabled. This is fine for now but is a polish item.
-- No inner pages exist yet. Every nav link other than Home leads nowhere.
+**Outstanding (Phase 6+):**
+- Nav still uses **“Amara & Partners” text** instead of the SVG logo (placeholder).
+- **`ENABLE_WAVE_UNDULATION`** and **`ENABLE_WAVE_INTERACTION`** remain off — polish when performance is validated.
+- **Placeholder content** everywhere (bios, legal pages, practice copy) — replace with firm-approved text before launch; legal pages carry an explicit draft notice in UI.
+- **Privacy / Terms** must be reviewed and replaced by counsel; footer links already point to the routes.
 
 ---
 
@@ -218,11 +213,11 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 
 **5.3 - Practice Areas ✓ Complete**
 - [x] `/practice` overview page: three clickable pillar cards (full-card Link, wave-700 bg)
-- [x] `/practice/[slug]` pillar detail page: full description, numbered area cards grid, CTA
-- [x] `src/data/practiceAreas.ts` created — enriched pillar + area descriptions (22 areas total)
-- [x] `generateStaticParams` pre-builds all 3 slugs; `dynamicParams = false` returns 404 for unknown slugs
-- [x] Next.js 15 async params pattern used correctly
-- [ ] Individual practice area pages (`/practice/[pillar]/[slug]`) deferred to post-launch with real content
+- [x] `/practice/[slug]` pillar detail page: full description, numbered area cards grid (each card links through), CTA
+- [x] `src/data/practiceAreas.ts` — pillar + per-area **`description`**, **`body[]`**, **`highlights[]`** (22 areas); helpers `getPracticeAreaBySlugs`, `getPracticeAreaStaticParams`
+- [x] `/practice/[slug]/[areaSlug]` **individual practice area pages** — PageHeader, overview, highlight grid, sibling pills, CTA; `generateStaticParams` for all 22 pairs; `dynamicParams = false`
+- [x] Next.js async `params` (`Promise`) pattern on all dynamic practice routes
+- [x] **Industries** `relatedPractices` hrefs updated to deep-link to area URLs where applicable (`src/data/industries.ts`)
 
 **5.4 - Industries ✓ Complete**
 - [x] `/industries` overview page: five clickable industry cards (wave-700 bg, same pattern as /practice)
@@ -249,15 +244,17 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [x] Form submission handler (frontend success state; API call deferred to Phase 7)
 - [x] Display: address, phone, email, map (query-based embed; swap for proper embed URL in Phase 7)
 
-**5.8 - People Page (`/people`) - Built but Hidden**
-- [ ] `/people` listing page: grid of `Card variant="person"`
-- [ ] `/people/[slug]` individual bio page: photo placeholder, qualifications, practice areas, contact
-- [ ] Create 3-5 placeholder team members
-- [ ] Keep hidden from navigation (no link in nav or footer); accessible only via direct URL
+**5.8 - People Page (`/people`) ✓ Complete (hidden from nav)**
+- [x] `/people` listing page: grid of `Card variant="person"` + placeholder notice + CTA
+- [x] `/people/[slug]` bio page: profile copy, **photo placeholder** (camera icon), qualifications list, related practice pills, mailto, CTA
+- [x] **`src/data/people.ts`** — five placeholder profiles; `getPersonBySlug`, `PERSON_SLUGS`; static generation for all slugs
+- [x] **`Card` person variant** — `href` required; full card is a **Link** to the bio URL
+- [x] **No People link** in nav or footer; direct URL only until Phase 8 activation
 
-**5.9 - Legal Pages**
-- [ ] `/privacy-policy` - placeholder privacy policy text
-- [ ] `/terms-of-use` - placeholder terms text
+**5.9 - Legal Pages ✓ Complete (placeholder copy)**
+- [x] `/privacy-policy` — `PageHeader` + cream body, **draft banner**, numbered sections (collection, use, rights, cookies, contact, etc.); counsel must replace before launch
+- [x] `/terms-of-use` — same pattern (not legal advice, acceptable use, liability, governing law placeholder, etc.)
+- [x] Footer legal links were already wired; routes now exist
 
 ---
 
@@ -383,8 +380,8 @@ These are choices that have not been finalized. They do not block current work b
 | Analytics | Plausible vs Vercel Analytics | Phase 7 |
 | Wave interaction | Enable pointer-driven displacement or keep disabled | Phase 6 |
 | Wave undulation | Enable SMIL turbulence animation or keep static | Phase 6 |
-| Section label badge | Keep as persistent UI or remove once content fills sections | Phase 4 |
-| Practice area page depth | Individual pages for each of 22 areas, or just pillar-level pages at launch | Phase 5 |
+| Section label badge | ~~Resolved — removed in Phase 4~~ | — |
+| Practice area page depth | **Resolved** — 22 static area pages at `/practice/[pillar]/[area]` with placeholder editorial copy; refine content in Phase 7 | Phase 7 |
 
 ---
 
@@ -396,6 +393,10 @@ src/
     page.tsx               Home page
     layout.tsx             Root layout (fonts, nav, metadata)
     globals.css            Tailwind v4 theme tokens + base styles
+    practice/              Overview, [slug] pillars, [slug]/[areaSlug] (22 areas)
+    people/                Listing + [slug] bios (hidden from nav at launch)
+    privacy-policy/        Placeholder policy (footer link)
+    terms-of-use/          Placeholder terms (footer link)
   components/
     layout/                Navigation, Footer, PageHeader
       nav/                 MegaMenu, MobileMenu
@@ -403,7 +404,7 @@ src/
     ui/                    Button, Card, Input, Badge
     waves/                 WaveSystem, WaveLayer, WaveSectionPanel
     dev/                   Dev-only test components (delete before launch)
-  data/                    Static data files (navigation, insights, practice areas)
+  data/                    Static data (navigation, insights, practiceAreas, industries, people)
   hooks/                   Custom React hooks
   lib/                     Utilities (cn, wavePaths)
   types/                   TypeScript type definitions

@@ -15,7 +15,7 @@
 
 export interface RelatedPractice {
   name: string;
-  /** Links to the pillar page — individual area pages deferred to post-launch */
+  /** Links to `/practice/[pillar]/[area]` where the sector maps cleanly to one area */
   href: string;
 }
 
@@ -91,10 +91,10 @@ export const industryDetails: IndustryDetail[] = [
       },
     ],
     relatedPractices: [
-      { name: "Banking and Finance", href: "/practice/corporate" },
-      { name: "Free Zone Structuring", href: "/practice/corporate" },
-      { name: "Corporate Compliance", href: "/practice/regulatory" },
-      { name: "Intellectual Property", href: "/practice/corporate" },
+      { name: "Banking and Finance", href: "/practice/corporate/banking-finance" },
+      { name: "Free Zone Structuring", href: "/practice/corporate/free-zone-structuring" },
+      { name: "Corporate Compliance", href: "/practice/regulatory/corporate-compliance" },
+      { name: "Intellectual Property", href: "/practice/corporate/intellectual-property" },
     ],
   },
 
@@ -144,10 +144,10 @@ export const industryDetails: IndustryDetail[] = [
       },
     ],
     relatedPractices: [
-      { name: "Arbitration", href: "/practice/disputes" },
-      { name: "Litigation", href: "/practice/disputes" },
-      { name: "Real Estate", href: "/practice/corporate" },
-      { name: "Corporate Commercial", href: "/practice/corporate" },
+      { name: "Arbitration", href: "/practice/disputes/arbitration" },
+      { name: "Litigation", href: "/practice/disputes/litigation" },
+      { name: "Real Estate", href: "/practice/corporate/real-estate" },
+      { name: "Corporate Commercial", href: "/practice/corporate/corporate-commercial" },
     ],
   },
 
@@ -197,10 +197,10 @@ export const industryDetails: IndustryDetail[] = [
       },
     ],
     relatedPractices: [
-      { name: "Cross-Border M&A", href: "/practice/corporate" },
-      { name: "Arbitration", href: "/practice/disputes" },
-      { name: "Banking and Finance", href: "/practice/corporate" },
-      { name: "Export Control", href: "/practice/regulatory" },
+      { name: "Cross-Border M&A", href: "/practice/corporate/cross-border-ma" },
+      { name: "Arbitration", href: "/practice/disputes/arbitration" },
+      { name: "Banking and Finance", href: "/practice/corporate/banking-finance" },
+      { name: "Export Control", href: "/practice/regulatory/export-control" },
     ],
   },
 
@@ -251,10 +251,10 @@ export const industryDetails: IndustryDetail[] = [
       },
     ],
     relatedPractices: [
-      { name: "Data Protection (PDPL)", href: "/practice/regulatory" },
-      { name: "Intellectual Property", href: "/practice/corporate" },
-      { name: "Corporate Compliance", href: "/practice/regulatory" },
-      { name: "Cross-Border M&A", href: "/practice/corporate" },
+      { name: "Data Protection (PDPL)", href: "/practice/regulatory/data-protection" },
+      { name: "Intellectual Property", href: "/practice/corporate/intellectual-property" },
+      { name: "Corporate Compliance", href: "/practice/regulatory/corporate-compliance" },
+      { name: "Cross-Border M&A", href: "/practice/corporate/cross-border-ma" },
     ],
   },
 
@@ -306,10 +306,10 @@ export const industryDetails: IndustryDetail[] = [
       },
     ],
     relatedPractices: [
-      { name: "Healthcare Regulatory", href: "/practice/regulatory" },
-      { name: "Data Protection (PDPL)", href: "/practice/regulatory" },
-      { name: "Employment and Pension", href: "/practice/regulatory" },
-      { name: "Cross-Border M&A", href: "/practice/corporate" },
+      { name: "Healthcare Regulatory", href: "/practice/regulatory/healthcare-regulatory" },
+      { name: "Data Protection (PDPL)", href: "/practice/regulatory/data-protection" },
+      { name: "Employment and Pension", href: "/practice/regulatory/employment-pension" },
+      { name: "Cross-Border M&A", href: "/practice/corporate/cross-border-ma" },
     ],
   },
 ];

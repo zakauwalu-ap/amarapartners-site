@@ -9,7 +9,7 @@
 // Usage examples:
 //   <Card variant="practice" pillar={{ number: "01", name: "Corporate & Transactions", description: "...", href: "/practice/corporate" }} />
 //   <Card variant="insight"  insight={{ title: "...", excerpt: "...", date: "...", readTime: "5 min", category: "Corporate", href: "/insights/slug", image: "/images/..." }} />
-//   <Card variant="person"   person={{ name: "Sarah Al Maktoum", role: "Senior Associate", initials: "SM", specialisations: ["Corporate", "M&A"] }} />
+//   <Card variant="person"   person={{ name: "...", role: "...", initials: "SM", specialisations: ["Corporate"], href: "/people/slug" }} />
 // =============================================================================
 
 import Link from "next/link";
@@ -43,6 +43,7 @@ export interface PersonCardData {
   role: string;            // e.g. "Managing Partner"
   initials: string;        // e.g. "SM" -- shown in the avatar circle
   specialisations: string[]; // Max 2-3 shown as Badge-like pills
+  href: string;            // e.g. "/people/sarah-al-maktoum" — full card is a link
 }
 
 // =============================================================================
@@ -217,7 +218,11 @@ function InsightCard({ insight, className }: { insight: InsightCardData; classNa
 
 function PersonCard({ person, className }: { person: PersonCardData; className?: string }) {
   return (
-    <div className={cn(baseCard, "group p-6 border border-light-grey items-center text-center", className)}>
+    <Link
+      href={person.href}
+      className={cn(baseCard, "group p-6 border border-light-grey items-center text-center", className)}
+      aria-label={`View profile: ${person.name}`}
+    >
 
       {/* --- Monogram avatar --- */}
       {/*
@@ -241,7 +246,7 @@ function PersonCard({ person, className }: { person: PersonCardData; className?:
       </div>
 
       {/* Name */}
-      <h3 className="font-heading text-heading-sm text-wave-700 leading-tight mb-1">
+      <h3 className="font-heading text-heading-sm text-wave-700 leading-tight mb-1 transition-colors duration-200 group-hover:text-wave-500">
         {person.name}
       </h3>
 
@@ -267,7 +272,26 @@ function PersonCard({ person, className }: { person: PersonCardData; className?:
           ))}
         </div>
       )}
-    </div>
+
+      <div className="mt-5 flex items-center justify-center gap-2 font-body text-body-sm text-wave-400 font-medium">
+        <span>View profile</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="transition-transform duration-300 group-hover:translate-x-1"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </div>
+    </Link>
   );
 }
 

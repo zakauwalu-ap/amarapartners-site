@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (Contact + Practice pages built; Industries page next)
+> **Last updated:** 2 April 2026 (Phase 5 complete — all inner pages built; Phase 6 polish next)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -224,19 +224,23 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [x] Next.js 15 async params pattern used correctly
 - [ ] Individual practice area pages (`/practice/[pillar]/[slug]`) deferred to post-launch with real content
 
-**5.4 - Industries**
-- [ ] `/industries` overview page: five industry cards
-- [ ] `/industries/[slug]` individual industry page: description, related practice areas, key contacts placeholder
+**5.4 - Industries ✓ Complete**
+- [x] `/industries` overview page: five clickable industry cards (wave-700 bg, same pattern as /practice)
+- [x] `/industries/[slug]` individual industry page: description + body text, key matters grid, related practice pills, CTA
+- [x] `src/data/industries.ts` created — enriched sector data with key matters + related practice cross-links
+- [x] `generateStaticParams` + `dynamicParams = false` for all 5 slugs; Next.js 15 async params
 
-**5.5 - Insights / Blog**
-- [ ] `/insights` listing page: grid of `Card variant="insight"`, category filter, pagination placeholder
-- [ ] `/insights/[slug]` article page: full-width header image, article body with typographic styling, related posts sidebar or bottom section
-- [ ] Create 3-5 placeholder articles in `src/data/insights.ts`
+**5.5 - Insights / Blog ✓ Complete**
+- [x] `/insights` listing page: 3-col card grid using `Card variant="insight"`
+- [x] `/insights/[slug]` article page: custom editorial header, narrow body column (lead + paragraphs), related articles, CTA
+- [x] `src/data/insights.ts` extended — `InsightFull` type with `body: string[]`; 3 full-length placeholder articles; `getInsightBySlug()` + `INSIGHT_SLUGS` helpers
+- [x] `generateStaticParams` + `dynamicParams = false`; Next.js 15 async params
 
-**5.6 - Jurisdictions Page (`/jurisdictions`)**
-- [ ] Layout: overview of Mainland UAE, ADGM, and DIFC legal frameworks
-- [ ] Brief explainer for each jurisdiction, what the firm offers in each
-- [ ] Consider a comparative table or visual differentiator
+**5.6 - Jurisdictions Page (`/jurisdictions`) ✓ Complete**
+- [x] Intro section with positioning statement
+- [x] Three jurisdiction panels: UAE Mainland, ADGM, DIFC — each with description, body text, and key features bullet list
+- [x] Comparison table (dark bg): side-by-side attributes for all three frameworks
+- [x] CTA section
 
 **5.7 - Contact Page (`/contact`) ✓ Complete**
 - [x] Layout: contact form on the left, firm details + Google Maps embed on the right

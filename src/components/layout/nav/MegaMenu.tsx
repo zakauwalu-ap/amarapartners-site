@@ -71,13 +71,13 @@ function PracticeColumns({ onClose }: { onClose: () => void }) {
               {pillar.number}
             </span>
             {/* Pillar name */}
-            <h3 className="font-heading text-heading-sm text-cream leading-tight mt-0.5 group-hover:text-gold transition-colors duration-200">
+            <h3 className="font-heading text-heading-sm text-cream leading-tight mt-0.5 group-hover:text-brand-gold transition-colors duration-200">
               {pillar.name}
             </h3>
           </Link>
 
           {/* Gold divider */}
-          <div className="w-6 h-px bg-gold mb-4" aria-hidden="true" />
+          <div className="w-6 h-px bg-brand-gold mb-4" aria-hidden="true" />
 
           {/* Sub-area links */}
           <ul className="space-y-2">
@@ -129,7 +129,7 @@ function IndustriesColumns({ onClose }: { onClose: () => void }) {
             transition-all duration-200
           "
         >
-          <span className="font-heading text-body-base text-cream group-hover:text-gold transition-colors duration-200">
+          <span className="font-heading text-body-base text-cream group-hover:text-brand-gold transition-colors duration-200">
             {industry.name}
           </span>
           <span className="font-body text-body-xs text-wave-300 leading-relaxed line-clamp-2">

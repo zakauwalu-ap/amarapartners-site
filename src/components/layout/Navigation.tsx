@@ -278,7 +278,7 @@ interface NavTriggerProps {
 }
 
 function NavTrigger({ label, isActive, isScrolled, onMouseEnter }: NavTriggerProps) {
-  const activeColor = "text-gold";
+  const activeColor = "text-brand-gold";
   const idleColor = isScrolled
     ? "text-wave-200 hover:text-cream"
     : "text-wave-700 hover:text-wave-500";

@@ -608,7 +608,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             ref={scrollHintRef}
             className="pointer-events-none absolute bottom-[5vh] inset-e-[6vw] z-30 flex items-center gap-3.5 opacity-0"
           >
-            <div className="h-px w-12 origin-end bg-gold" aria-hidden />
+            <div className="h-px w-12 origin-end bg-brand-gold" aria-hidden />
             <span className="font-body text-[0.58rem] uppercase tracking-[0.45em] text-wave-700/45">
               Scroll
             </span>
@@ -616,7 +616,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <p
             ref={dispLabelRef}
-            className="wave-disp-label pointer-events-none absolute bottom-[5vh] inset-s-[8vw] z-30 font-body text-[0.58rem] uppercase tracking-[0.4em] text-gold/0 transition-colors duration-600"
+            className="wave-disp-label pointer-events-none absolute bottom-[5vh] inset-s-[8vw] z-30 font-body text-[0.58rem] uppercase tracking-[0.4em] text-brand-gold/0 transition-colors duration-600"
           >
             Field active
           </p>
@@ -627,7 +627,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
       {enableCustomCursor ? (
         <div
           ref={cursorRef}
-          className="wave-cursor pointer-events-none fixed left-0 top-0 z-45 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold mix-blend-screen transition-[transform,background-color] duration-100"
+          className="wave-cursor pointer-events-none fixed left-0 top-0 z-45 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-gold mix-blend-screen transition-[transform,background-color] duration-100"
           aria-hidden
         />
       ) : null}

@@ -43,12 +43,12 @@ interface ButtonProps {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: cn(
-    // Gold background, dark text
-    "bg-gold text-wave-700",
-    // Hover: slightly lighter gold, subtle lift
-    "hover:bg-brand-gold hover:shadow-gold-glow",
+    // Brand-gold background, dark text
+    "bg-brand-gold text-wave-700",
+    // Hover: deepen to gold, subtle lift
+    "hover:bg-gold hover:shadow-gold-glow",
     // Border matches background so it sits flush
-    "border border-gold hover:border-brand-gold"
+    "border border-brand-gold hover:border-gold"
   ),
 
   secondary: cn(
@@ -61,8 +61,8 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost: cn(
     // No background or border -- just styled text
     "bg-transparent border-0 text-wave-400",
-    // Hover: shift to gold
-    "hover:text-gold",
+    // Hover: shift to brand-gold
+    "hover:text-brand-gold",
     // Underline that slides in from left on hover
     "relative after:absolute after:bottom-0 after:left-0",
     "after:h-px after:w-0 after:bg-current",

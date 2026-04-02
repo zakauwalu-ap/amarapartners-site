@@ -94,7 +94,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     <Link
                       href={`/practice/${pillar.slug}`}
                       onClick={onClose}
-                      className="font-heading text-body-base text-gold block mb-2"
+                      className="font-heading text-body-base text-brand-gold block mb-2"
                     >
                       {pillar.name}
                     </Link>

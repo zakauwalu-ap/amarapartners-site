@@ -54,7 +54,7 @@ export const WaveSectionPanel = ({
       />
 
       <div ref={innerRef} className="panel-inner max-w-[620px] will-change-transform">
-        <p className="font-body text-[0.58rem] uppercase tracking-[0.48em] text-gold opacity-55 mb-8">
+        <p className="font-body text-[0.58rem] uppercase tracking-[0.48em] text-brand-gold opacity-55 mb-8">
           {panel.tag}
         </p>
         <h2 className="font-heading text-display-md font-medium leading-[1.08] text-wave-100">

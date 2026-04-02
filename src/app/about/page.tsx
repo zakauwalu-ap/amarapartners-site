@@ -96,7 +96,7 @@ export default function AboutPage() {
 
               {/* Left: copy ----------------------------------------------- */}
               <div>
-                <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-gold/80">
+                <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-brand-gold/80">
                   Founded · Abu Dhabi · 2019
                 </p>
 
@@ -104,7 +104,7 @@ export default function AboutPage() {
                   Counsel forged in the heart of the UAE.
                 </h2>
 
-                <div className="mb-8 h-px w-16 bg-gold" aria-hidden="true" />
+                <div className="mb-8 h-px w-16 bg-brand-gold" aria-hidden="true" />
 
                 <p className="mb-6 font-body text-body-lg leading-relaxed text-shadow-grey">
                   Amara &amp; Partners was founded to fill a gap in the Abu Dhabi
@@ -228,13 +228,13 @@ export default function AboutPage() {
 
                   {/* Ordinal number — decorative, low-contrast */}
                   <span
-                    className="font-heading text-display-md leading-none text-gold/20 select-none tabular-nums"
+                    className="font-heading text-display-md leading-none text-brand-gold/20 select-none tabular-nums"
                     aria-hidden="true"
                   >
                     0{i + 1}
                   </span>
 
-                  <div className="h-px w-10 bg-gold/50" aria-hidden="true" />
+                  <div className="h-px w-10 bg-brand-gold/50" aria-hidden="true" />
 
                   <h3 className="font-heading text-body-xl leading-tight text-wave-100">
                     {value.title}
@@ -265,7 +265,7 @@ export default function AboutPage() {
 
               {/* Left: pullquote */}
               <div>
-                <div className="mb-8 h-px w-16 bg-gold" aria-hidden="true" />
+                <div className="mb-8 h-px w-16 bg-brand-gold" aria-hidden="true" />
                 <blockquote className="font-heading text-display-md italic leading-[1.15] text-wave-100">
                   "A team that values depth over volume. We take fewer matters
                   than a larger firm might, and we do each one fully."

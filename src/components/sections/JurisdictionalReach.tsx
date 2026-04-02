@@ -87,13 +87,13 @@ export function JurisdictionalReach() {
               <h3 className="font-heading text-display-md leading-tight text-wave-100">
                 {j.name}
               </h3>
-              <p className="mt-1 font-body text-body-xs font-medium uppercase tracking-[0.18em] text-gold/80">
+              <p className="mt-1 font-body text-body-xs font-medium uppercase tracking-[0.18em] text-brand-gold/80">
                 {j.framework}
               </p>
             </div>
 
             {/* Gold rule */}
-            <div className="h-px w-10 bg-gold/50" aria-hidden="true" />
+            <div className="h-px w-10 bg-brand-gold/50" aria-hidden="true" />
 
             {/* Description */}
             <p className="font-body text-body-sm leading-relaxed text-wave-100/70">
@@ -107,7 +107,7 @@ export function JurisdictionalReach() {
                   key={point}
                   className="flex items-start gap-2.5 font-body text-body-xs text-wave-200/60"
                 >
-                  <span aria-hidden="true" className="mt-[3px] h-1 w-1 shrink-0 rounded-full bg-gold/60" />
+                  <span aria-hidden="true" className="mt-[3px] h-1 w-1 shrink-0 rounded-full bg-brand-gold/60" />
                   {point}
                 </li>
               ))}

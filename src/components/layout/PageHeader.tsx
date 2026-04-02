@@ -136,7 +136,7 @@ export function PageHeader({
 
         {/* Eyebrow label */}
         {eyebrow && (
-          <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-gold/80">
+          <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-brand-gold/80">
             {eyebrow}
           </p>
         )}
@@ -147,7 +147,7 @@ export function PageHeader({
         </h1>
 
         {/* Gold accent rule */}
-        <div className="mb-6 h-px w-16 bg-gold" aria-hidden="true" />
+        <div className="mb-6 h-px w-16 bg-brand-gold" aria-hidden="true" />
 
         {/* Subtitle */}
         {subtitle && (

@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (PageHeader built; About page built; not-found.tsx removed)
+> **Last updated:** 2 April 2026 (Contact + Practice pages built; Industries page next)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -216,10 +216,13 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [x] Key facts strip (Established, Practice Areas, Pillars, Base)
 - [x] Timeline or milestones section — deferred; not needed at this stage
 
-**5.3 - Practice Areas**
-- [ ] `/practice` overview page: three pillar cards linking to pillar detail pages
-- [ ] `/practice/[slug]` pillar detail page: pillar description, list of sub-areas with descriptions
-- [ ] `/practice/[pillar]/[slug]` individual practice area page (optional at launch; can redirect to pillar page)
+**5.3 - Practice Areas ✓ Complete**
+- [x] `/practice` overview page: three clickable pillar cards (full-card Link, wave-700 bg)
+- [x] `/practice/[slug]` pillar detail page: full description, numbered area cards grid, CTA
+- [x] `src/data/practiceAreas.ts` created — enriched pillar + area descriptions (22 areas total)
+- [x] `generateStaticParams` pre-builds all 3 slugs; `dynamicParams = false` returns 404 for unknown slugs
+- [x] Next.js 15 async params pattern used correctly
+- [ ] Individual practice area pages (`/practice/[pillar]/[slug]`) deferred to post-launch with real content
 
 **5.4 - Industries**
 - [ ] `/industries` overview page: five industry cards
@@ -235,12 +238,12 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [ ] Brief explainer for each jurisdiction, what the firm offers in each
 - [ ] Consider a comparative table or visual differentiator
 
-**5.7 - Contact Page (`/contact`)**
-- [ ] Layout: contact form on the left, firm details + Google Maps embed on the right
-- [ ] Use the Input, Textarea, and Select components already built
-- [ ] Form fields: Name, Email, Phone (optional), Area of Interest (dropdown), Message
-- [ ] Form submission handler (initially just a frontend success state; backend integration deferred)
-- [ ] Display: address, phone, email, map
+**5.7 - Contact Page (`/contact`) ✓ Complete**
+- [x] Layout: contact form on the left, firm details + Google Maps embed on the right
+- [x] Use the Input, Textarea, and Select components already built
+- [x] Form fields: Name, Email, Phone (optional), Area of Interest (dropdown), Message
+- [x] Form submission handler (frontend success state; API call deferred to Phase 7)
+- [x] Display: address, phone, email, map (query-based embed; swap for proper embed URL in Phase 7)
 
 **5.8 - People Page (`/people`) - Built but Hidden**
 - [ ] `/people` listing page: grid of `Card variant="person"`

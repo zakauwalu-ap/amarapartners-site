@@ -41,7 +41,7 @@ export function CTAContact() {
 
         {/* Left column — heading + CTAs */}
         <div className="flex flex-col justify-center">
-          <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-gold/70">
+          <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-brand-gold/70">
             Get in touch
           </p>
 
@@ -77,7 +77,7 @@ export function CTAContact() {
                   {href ? (
                     <Link
                       href={href}
-                      className="transition-colors duration-200 hover:text-gold"
+                      className="transition-colors duration-200 hover:text-brand-gold"
                     >
                       {value}
                     </Link>

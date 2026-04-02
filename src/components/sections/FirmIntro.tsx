@@ -35,7 +35,7 @@ export function FirmIntro() {
       </h2>
 
       {/* Gold rule */}
-      <div className="mb-8 h-px w-16 bg-gold" aria-hidden="true" />
+      <div className="mb-8 h-px w-16 bg-brand-gold" aria-hidden="true" />
 
       {/* Positioning copy */}
       <p className="mb-4 max-w-[52ch] font-body text-body-lg leading-relaxed text-shadow-grey">

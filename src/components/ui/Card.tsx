@@ -82,7 +82,7 @@ function PracticeCard({ pillar, className }: { pillar: PracticeCardData; classNa
       className={cn(baseCard, "group p-8 min-h-[280px] border border-wave-100/60", className)}
     >
       {/* Gold top-border accent -- the visual anchor for the card */}
-      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gold" aria-hidden="true" />
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-brand-gold" aria-hidden="true" />
 
       {/* Pillar number -- subtle, top-right */}
       <span
@@ -98,7 +98,7 @@ function PracticeCard({ pillar, className }: { pillar: PracticeCardData; classNa
       </h3>
 
       {/* Thin gold divider */}
-      <div className="w-8 h-px bg-gold mb-4" aria-hidden="true" />
+      <div className="w-8 h-px bg-brand-gold mb-4" aria-hidden="true" />
 
       {/* Description */}
       <p className="font-body text-body-base text-shadow-grey leading-relaxed flex-1">
@@ -246,7 +246,7 @@ function PersonCard({ person, className }: { person: PersonCardData; className?:
       </h3>
 
       {/* Role / title -- gold accent */}
-      <p className="font-body text-body-sm text-gold font-medium mb-4">
+      <p className="font-body text-body-sm text-brand-gold font-medium mb-4">
         {person.role}
       </p>
 

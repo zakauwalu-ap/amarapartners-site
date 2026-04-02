@@ -52,7 +52,7 @@ const fieldBox = cn(
   // Normal border
   "border-light-grey",
   // Focus ring -- gold bottom border effect via ring
-  "focus:border-gold focus:ring-0",
+  "focus:border-brand-gold focus:ring-0",
   // Disabled
   "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-light-grey/30"
 );
@@ -66,7 +66,7 @@ const floatingLabel = (isFloated: boolean, hasError: boolean) =>
     isFloated && "top-0 -translate-y-1/2",
     isFloated && "text-[11px] font-medium uppercase tracking-wider px-1",
     isFloated && "bg-cream",
-    isFloated && (hasError ? "text-red-500" : "text-gold"),
+    isFloated && (hasError ? "text-red-500" : "text-brand-gold"),
     // IDLE STATE: sits inside the field like placeholder text
     !isFloated && "top-1/2 -translate-y-1/2",
     !isFloated && "text-body-base text-shadow-grey/70"
@@ -184,7 +184,7 @@ export function Textarea({
     isFloated && "top-0 -translate-y-1/2",
     isFloated && "text-[11px] font-medium uppercase tracking-wider px-1",
     isFloated && "bg-cream",
-    isFloated && (error ? "text-red-500" : "text-gold"),
+    isFloated && (error ? "text-red-500" : "text-brand-gold"),
     !isFloated && "top-4",
     !isFloated && "text-body-base text-shadow-grey/70"
   );

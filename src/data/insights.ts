@@ -43,8 +43,8 @@ export const insightArticles: InsightFull[] = [
     readTime: "6 min read",
     category: "Corporate & Transactions",
     href: "/insights/adgm-fund-structures-2025",
-    image: "/images/insights/adgm-fund-structures.jpg",
-    imageAlt: "Abu Dhabi Global Market financial centre",
+    image: "/images/sora-pics/abstract-geometric-landscape-1.png",
+    imageAlt: "Abstract geometric landscape in cool blue tones",
     author: "Amara & Partners",
     authorTitle: "Corporate & Transactions Team",
     body: [
@@ -68,8 +68,8 @@ export const insightArticles: InsightFull[] = [
     readTime: "8 min read",
     category: "Regulatory & Compliance",
     href: "/insights/uae-pdpl-compliance-guide",
-    image: "/images/insights/data-protection.jpg",
-    imageAlt: "Abstract representation of data privacy",
+    image: "/images/sora-pics/charcoal-and-blue-cubes.png",
+    imageAlt: "Abstract charcoal and blue cubic forms",
     author: "Amara & Partners",
     authorTitle: "Regulatory & Compliance Team",
     body: [
@@ -93,8 +93,8 @@ export const insightArticles: InsightFull[] = [
     readTime: "7 min read",
     category: "Corporate & Transactions",
     href: "/insights/cross-border-ma-due-diligence",
-    image: "/images/insights/cross-border-ma.jpg",
-    imageAlt: "Business professionals reviewing documents in a modern office",
+    image: "/images/sora-pics/geometric-precision-structure-1.png",
+    imageAlt: "Geometric precision structure with layered angular forms",
     author: "Amara & Partners",
     authorTitle: "Corporate & Transactions Team",
     body: [

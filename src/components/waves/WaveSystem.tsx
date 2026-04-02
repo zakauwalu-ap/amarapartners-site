@@ -22,7 +22,18 @@ if (typeof window !== "undefined") {
 // Scroll + mask behaviour (ported from wave-prototype-v3-opt.html)
 // -----------------------------------------------------------------------------
 
-const SECTION_COUNT = 7;
+// -----------------------------------------------------------------------------
+// Content panel constants
+// 7 visual zones (hero + 5 sections + implied footer), 6 intervals.
+// ZONE_STEP is the scroll-progress width of each zone.
+// Panels enter from PANEL_ENTER_Y px below, exit PANEL_EXIT_Y px upward —
+// the directional motion prevents the "slideshow" feel that pure crossfades create.
+// -----------------------------------------------------------------------------
+const PANEL_COUNT  = 5;
+const ZONE_STEP    = 1 / 6;
+const PANEL_ENTER_Y = 60; // px — panel rises up from this offset on entry
+const PANEL_EXIT_Y  = -30; // px — panel continues upward by this amount on exit
+
 const WAVE_CY = [0.86, 0.8, 0.74, 0.68, 0.62, 0.56, 0.5] as const;
 const BASE_SCALE = 5;
 const HOVER_ADD = 30;
@@ -98,16 +109,6 @@ const WAVE_FILLS = [
   "#7BA3C9",
   "#B8CCDE",
 ] as const;
-const SECTION_TITLES = [
-  "Hero",
-  "Firm Introduction",
-  "Practice Pillars",
-  "Featured Insights",
-  "Jurisdictional Reach",
-  "CTA / Contact",
-  "Footer",
-] as const;
-
 /** Primary grey lockup — viewBox 252×144 in source SVG. */
 const HERO_LOGO_SRC = "/images/logo/A&P_logo_grey_primary_RGB.svg";
 
@@ -143,10 +144,11 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const maskCache = useRef<string[]>([]);
   const prevLayerT = useRef<number[]>([]);
   const prevHeroO = useRef<number>(-1);
-  const prevNavState = useRef<number>(-1);
-  const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // One ref per content panel (zones 1–5: FirmIntro, PillarCards, Insights, Jurisdictions, CTA)
+
+  // One ref per content panel; tracks last-written opacity + translateY so we
+  // skip DOM writes when quantised values haven't changed.
   const sectionPanelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const prevPanelState = useRef<{ opacity: number; translateY: number }[]>([]);
 
   const curScales = useRef<number[]>([]);
   const tgtScales = useRef<number[]>([]);
@@ -171,6 +173,10 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     prevLayerT.current = Array.from({ length: waveCount }, () => -1);
     curScales.current = Array.from({ length: waveCount }, () => BASE_SCALE);
     tgtScales.current = Array.from({ length: waveCount }, () => BASE_SCALE);
+    prevPanelState.current = Array.from({ length: PANEL_COUNT }, () => ({
+      opacity: -1,
+      translateY: 0,
+    }));
   }, [waveCount]);
 
   const mouseX = useRef(0);
@@ -190,9 +196,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     []
   );
 
-  const setDotRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
-    dotRefs.current[i] = el;
-  }, []);
 
   const setPanelRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
     sectionPanelRefs.current[i] = el;
@@ -295,28 +298,17 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           }
         }
 
-        const state = Math.round(prog * (SECTION_COUNT - 1));
-        if (state !== prevNavState.current) {
-          prevNavState.current = state;
-          for (let idx = 0; idx < SECTION_COUNT; idx++) {
-            dotRefs.current[idx]?.classList.toggle(
-              "wave-nav-dot-active",
-              idx === state
-            );
-          }
-        }
-
-        // ── Section content panel opacity ──────────────────────────
-        // ZONE_STEP = 1/(SECTION_COUNT-1). Each panel j maps to zone z=j+1.
+        // ── Section content panel opacity + slide-up motion ──────────────────
+        // Each panel (j=0..4) maps to zone z=j+1.
         //
-        // Flat-top dwell curve per panel (magazine-style):
-        //   fadeInStart → dwellStart : ramp from 0 → 1   (~90vh at 1200vh driver)
-        //   dwellStart  → dwellEnd   : hold at 1          (~80vh dwell window)
-        //   dwellEnd    → fadeOutEnd : ramp from 1 → 0   (~90vh)
+        // Transition shape per panel:
+        //   fadeInStart → dwellStart : slides up from +60px while fading in
+        //   dwellStart  → dwellEnd   : fully visible, no transform (~80vh hold)
+        //   dwellEnd    → fadeOutEnd : continues upward –30px while fading out
         //
-        // The last panel (CTA, j=4) has no fade-out — stays visible to end.
-        const ZONE_STEP = 1 / (SECTION_COUNT - 1);
-        const PANEL_COUNT = 5;
+        // The directional motion (rise to enter, continue rising to exit) feels
+        // like genuine scrolling through a layered space — not a slide click.
+        // The last panel (CTA, j=4) never fades out; it stays through end of driver.
         for (let j = 0; j < PANEL_COUNT; j++) {
           const z = j + 1;
           const fadeInStart = (z - 0.65) * ZONE_STEP;
@@ -324,21 +316,32 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           const dwellEnd    = (z + 0.2)  * ZONE_STEP;
           const fadeOutEnd  = (z + 0.65) * ZONE_STEP;
 
-          const fadeIn  = clamp((prog - fadeInStart) / (dwellStart - fadeInStart), 0, 1);
-          const fadeOut = j < PANEL_COUNT - 1
-            ? clamp(1 - (prog - dwellEnd) / (fadeOutEnd - dwellEnd), 0, 1)
-            : 1;
-          const opacity = Math.min(fadeIn, fadeOut);
-          // Quantise to 1/256 steps to avoid unnecessary repaints
-          const qOpacity = (Math.round(opacity * 256) | 0) / 256;
+          const enterProg = clamp((prog - fadeInStart) / (dwellStart - fadeInStart), 0, 1);
+          const exitProg  = j < PANEL_COUNT - 1
+            ? clamp((prog - dwellEnd) / (fadeOutEnd - dwellEnd), 0, 1)
+            : 0;
 
-          const el = sectionPanelRefs.current[j];
-          if (el) {
-            el.style.opacity = String(qOpacity);
-            // Only allow pointer interaction when the panel is substantially visible
+          const easedEnter = ease(enterProg);
+          const easedExit  = ease(exitProg);
+
+          const opacity    = Math.min(easedEnter, 1 - easedExit);
+          const translateY = (1 - easedEnter) * PANEL_ENTER_Y + easedExit * PANEL_EXIT_Y;
+
+          // Quantise to limit DOM writes: opacity to 1/256, translateY to 0.5px
+          const qOpacity    = (Math.round(opacity    * 256) | 0) / 256;
+          const qTranslateY = Math.round(translateY  * 2)   / 2;
+
+          const el   = sectionPanelRefs.current[j];
+          const prev = prevPanelState.current[j];
+          if (el && prev && (qOpacity !== prev.opacity || qTranslateY !== prev.translateY)) {
+            prev.opacity    = qOpacity;
+            prev.translateY = qTranslateY;
+            el.style.opacity       = String(qOpacity);
+            el.style.transform     = `translateY(${qTranslateY}px)`;
             el.style.pointerEvents = qOpacity > 0.5 ? "auto" : "none";
           }
         }
+
       },
     });
 
@@ -471,7 +474,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
         <div className="relative z-30 flex min-h-screen flex-col px-[8vw] pb-[9vh] pt-[7vh]">
           <div className="mb-3">
             <p className="font-body text-body-sm font-semibold uppercase tracking-[0.28em] text-wave-700/80">
-              {SECTION_TITLES[0]}
+              Hero
             </p>
           </div>
           <div className="flex shrink-0 justify-center">
@@ -496,7 +499,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   return (
     <>
-      <div ref={driverRef} className="relative h-[1200vh]" data-wave-scroll-driver>
+      <div ref={driverRef} className="relative h-[1000vh]" data-wave-scroll-driver>
         <div
           className={cn(
             "sticky top-0 h-screen overflow-hidden",
@@ -531,14 +534,15 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             />
           ))}
 
-          {/* ── Section content panels (zones 1–5) ─────────────────────
-               Each panel occupies the full sticky viewport at z-20, sitting
-               above all wave layers (z-2 to z-8) but below the hero logo (z-30).
-               Opacity and pointer-events are driven by the scroll handler.   */}
+          {/* ── Section content panels ───────────────────────────────────────
+               Each panel sits at z-20, above all wave layers (z-2 to z-8) but
+               below the hero logo (z-30). Initial inline styles set the GSAP
+               start state (invisible, offset below) before the first scroll tick.
+               The scroll handler drives opacity + translateY on every frame.    */}
 
           <div
             ref={setPanelRef(0)}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
             className="absolute inset-0 z-20 overflow-hidden bg-cream"
           >
             <FirmIntro />
@@ -546,7 +550,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <div
             ref={setPanelRef(1)}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
             className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
           >
             <PillarCards />
@@ -554,7 +558,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <div
             ref={setPanelRef(2)}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
             className="absolute inset-0 z-20 overflow-hidden bg-wave-500"
           >
             <FeaturedInsights />
@@ -562,7 +566,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <div
             ref={setPanelRef(3)}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
             className="absolute inset-0 z-20 overflow-hidden bg-wave-600"
           >
             <JurisdictionalReach />
@@ -570,7 +574,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <div
             ref={setPanelRef(4)}
-            style={{ opacity: 0, pointerEvents: "none" }}
+            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
             className="absolute inset-0 z-20 overflow-hidden bg-wave-700"
           >
             <CTAContact />
@@ -617,21 +621,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
         </div>
       </div>
 
-      <nav
-        className="pointer-events-none fixed inset-e-[2.2vw] top-1/2 z-40 flex -translate-y-1/2 flex-col gap-[11px]"
-        aria-hidden
-      >
-        {Array.from({ length: SECTION_COUNT }, (_, i) => (
-          <div
-            key={`dot-${i}`}
-            ref={setDotRef(i)}
-            className={cn(
-              "wave-nav-dot h-[3px] w-[3px] rounded-full bg-wave-100/25 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-              i === 0 && "wave-nav-dot-active"
-            )}
-          />
-        ))}
-      </nav>
 
       {enableCustomCursor ? (
         <div

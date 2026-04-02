@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (Phase 4 complete + scroll polish)
+> **Last updated:** 2 April 2026 (Phase 4 complete + scroll polish + section transition redesign)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -154,7 +154,7 @@ Each scroll zone in the 780vh driver now has a solid-background content panel. P
 
 ---
 
-### Scroll Polish (Complete — 2 April 2026)
+### Scroll Polish + Architecture Refactor (Complete — 2 April 2026)
 
 Addressed between Phase 4 and Phase 5 as a standalone improvement session.
 
@@ -164,11 +164,34 @@ Addressed between Phase 4 and Phase 5 as a standalone improvement session.
 - `LenisProvider` (`src/components/providers/LenisProvider.tsx`) wraps the root layout. An inner `LenisGsapSync` component (inside the ReactLenis context) wires `ScrollTrigger.update` as a scroll listener and adds `lenis.raf` to `gsap.ticker`. `gsap.ticker.lagSmoothing(0)` prevents timestamp clamping after tab switches.
 - `prefers-reduced-motion` respected: Lenis is skipped entirely and children render with native scroll.
 
+**Smooth scroll (Lenis):**
 - [x] Install `lenis` (v1.3.21)
 - [x] Build `LenisProvider` at `src/components/providers/LenisProvider.tsx` — `root` mode, `lerp: 0.05` (luxurious inertia), `autoRaf: false`, GSAP ticker sync, reduced-motion fallback
 - [x] Wrap root layout body with `LenisProvider`
-- [x] Increase scroll driver from `780vh` to `1200vh` — each zone is now ~200vh, wave departures scale proportionally and feel more gradual
-- [x] Replace zero-dwell peak opacity curve with a flat-top dwell curve: ~90vh ramp-in → ~80vh hold at full opacity → ~90vh ramp-out per section
+
+**Home page architecture refactor (Path B — Wave hero + normal scroll):**
+
+The full-viewport sticky panel system (Phase 4) was replaced. The site was behaving like a slideshow — full-screen opacity fades are structurally identical to slide transitions regardless of timing. The fix is architectural.
+
+- [x] `WaveSystem` stripped to a pure wave-hero component. Scroll driver reduced from `1200vh` to `700vh` — covers only the wave peel sequence. Content panels and dot navigation removed entirely.
+- [x] `src/components/ui/AnimateIn.tsx` created — reusable GSAP ScrollTrigger fade-up wrapper. Triggers at `top 80%`, `power3.out` easing, respects `prefers-reduced-motion`. Reusable for all Phase 5 inner pages.
+- [x] `src/app/page.tsx` rebuilt — five content sections now live in normal document flow below the wave driver, each wrapped in `<AnimateIn>` with their own background colour.
+- [x] Five section components updated — `h-full` → `min-h-screen` so each section sizes correctly in normal document flow.
+- [x] Section backgrounds preserved: cream (FirmIntro), wave-700 (Pillars), wave-500 (Insights), wave-600 (Jurisdictions), wave-700 (CTA).
+- [x] `AnimateIn` component (`src/components/ui/AnimateIn.tsx`) created as a permanent, reusable asset — GSAP ScrollTrigger fade-up wrapper for Phase 5 inner pages.
+
+**Path B reverted — sections re-integrated into the wave driver (2 April 2026):**
+
+Path B (sections in normal flow below the driver) required scrolling through the entire 700vh wave sequence before seeing any content. User feedback: "incorporate the sections into the waves."
+
+Architecture decision: sections restored inside the sticky viewport, but the transition mechanism was redesigned to eliminate the slideshow feel.
+
+- Old transitions (Phase 4): pure opacity crossfade (0→1→0). Structurally identical to a slideshow.
+- New transitions: **combined translateY + opacity** — each panel slides up from +60px on entry, holds fully visible for ~80vh, then exits by continuing upward –30px. The directional motion gives the user a physical sense of scrolling through layered space rather than clicking Next.
+- Content begins appearing at ~60vh from the top of the driver (10% in) — users see information within the first screen of scrolling.
+- Driver height: `700vh` → `1000vh` to accommodate the hold windows and full wave peel sequence.
+- `page.tsx` reverted to `<Hero />` only; section components reverted to `h-full`.
+- `PANEL_ENTER_Y = 60px`, `PANEL_EXIT_Y = -30px`, flat-top dwell curve retained from earlier work.
 
 ---
 

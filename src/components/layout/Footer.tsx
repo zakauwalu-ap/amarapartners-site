@@ -88,7 +88,7 @@ export function Footer() {
         <div className="mx-auto max-w-(--width-wide) px-[8vw]">
 
         {/* ── Top section: logo + strapline ─────────────────────────── */}
-        <div className="border-b border-wave-600 py-14">
+        <div className="border-b border-wave-600 py-10">
           <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
 
             {/* Logo + description */}
@@ -131,7 +131,7 @@ export function Footer() {
         </div>
 
         {/* ── Middle section: link columns ──────────────────────────── */}
-        <div className="border-b border-wave-600 py-12">
+        <div className="border-b border-wave-600 py-8">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-3">
             <FooterLinkColumn column={practiceColumn} />
             <FooterLinkColumn column={industriesColumn} />
@@ -140,7 +140,7 @@ export function Footer() {
         </div>
 
         {/* ── Bottom bar: copyright + legal ─────────────────────────── */}
-        <div className="flex flex-col gap-3 py-7 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-body text-body-xs text-wave-500">
             &copy; {currentYear} Amara &amp; Partners Legal Consultants.
             All rights reserved.

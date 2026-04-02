@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 2 April 2026 (wave panels semi-transparent + driver height reduced to 700vh)
+> **Last updated:** 2 April 2026 (PageHeader built; About page built; not-found.tsx removed)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -202,13 +202,19 @@ Architecture decision: sections restored inside the sticky viewport, but the tra
 Each page uses a shared `PageHeader` component at the top, then page-specific content below. All pages end with the `Footer`.
 
 **5.1 - Shared Page Layout**
-- [ ] Build the `PageHeader` component: page title, optional subtitle/breadcrumb, wave-gradient background strip
-- [ ] Create a reusable inner-page layout wrapper that includes PageHeader + Footer
+- [x] Build the `PageHeader` component: page title, optional subtitle/breadcrumb, wave-gradient background strip
+  - Props: `title`, `subtitle`, `eyebrow`, `breadcrumb[]`, `dividerFill`
+  - Background: `wave-700 → wave-600 → wave-500` gradient (continuous from nav solid state)
+  - Decorative faint wave path in background at 4% opacity
+  - SVG wave-curve bottom divider — fill color controlled via `dividerFill` prop (defaults to `fill-cream`)
+  - Server Component; no animation — AnimateIn wraps individual sections below
+- [ ] ~~Create a reusable inner-page layout wrapper~~ — not needed; PageHeader + Footer in root layout is sufficient
 
 **5.2 - About Page (`/about`)**
-- [ ] Layout: firm story, values, founding context, team culture
-- [ ] Placeholder copy and a placeholder image area
-- [ ] Timeline or milestones section (optional)
+- [x] Layout: firm story, values, founding context, team culture
+- [x] Placeholder copy and placeholder image area (camera icon placeholder, ready for next/image swap)
+- [x] Key facts strip (Established, Practice Areas, Pillars, Base)
+- [x] Timeline or milestones section — deferred; not needed at this stage
 
 **5.3 - Practice Areas**
 - [ ] `/practice` overview page: three pillar cards linking to pillar detail pages

@@ -30,7 +30,9 @@ if (typeof window !== "undefined") {
 // the directional motion prevents the "slideshow" feel that pure crossfades create.
 // -----------------------------------------------------------------------------
 const PANEL_COUNT  = 5;
-const ZONE_STEP    = 1 / 6;
+// Denominator 5.5 (not 6) shifts the CTA zone's "fully visible" point to ~87%
+// of the driver, leaving only ~76vh of dead hold at 600vh instead of 140vh.
+const ZONE_STEP    = 1 / 5.5;
 const PANEL_ENTER_Y = 60; // px — panel rises up from this offset on entry
 const PANEL_EXIT_Y  = -30; // px — panel continues upward by this amount on exit
 
@@ -499,7 +501,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   return (
     <>
-      <div ref={driverRef} className="relative h-[700vh]" data-wave-scroll-driver>
+      <div ref={driverRef} className="relative h-[600vh]" data-wave-scroll-driver>
         <div
           className={cn(
             "sticky top-0 h-screen overflow-hidden",

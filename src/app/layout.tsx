@@ -13,6 +13,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { LenisProvider } from "@/components/providers/LenisProvider";
 
 // -----------------------------------------------------------
 // FONT SETUP
@@ -74,9 +75,11 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable}`}
     >
       <body>
-        <Navigation />
-        {children}
-        <Footer />
+        <LenisProvider>
+          <Navigation />
+          {children}
+          <Footer />
+        </LenisProvider>
       </body>
     </html>
   );

@@ -308,19 +308,25 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
         // ── Section content panel opacity ──────────────────────────
         // ZONE_STEP = 1/(SECTION_COUNT-1). Each panel j maps to zone z=j+1.
-        // Panels fade in/out smoothly around their zone centre.
+        //
+        // Flat-top dwell curve per panel (magazine-style):
+        //   fadeInStart → dwellStart : ramp from 0 → 1   (~90vh at 1200vh driver)
+        //   dwellStart  → dwellEnd   : hold at 1          (~80vh dwell window)
+        //   dwellEnd    → fadeOutEnd : ramp from 1 → 0   (~90vh)
+        //
         // The last panel (CTA, j=4) has no fade-out — stays visible to end.
         const ZONE_STEP = 1 / (SECTION_COUNT - 1);
         const PANEL_COUNT = 5;
         for (let j = 0; j < PANEL_COUNT; j++) {
           const z = j + 1;
-          const fadeInStart = (z - 0.6) * ZONE_STEP;
-          const center      = z * ZONE_STEP;
-          const fadeOutEnd  = (z + 0.5) * ZONE_STEP;
+          const fadeInStart = (z - 0.65) * ZONE_STEP;
+          const dwellStart  = (z - 0.2)  * ZONE_STEP;
+          const dwellEnd    = (z + 0.2)  * ZONE_STEP;
+          const fadeOutEnd  = (z + 0.65) * ZONE_STEP;
 
-          const fadeIn  = clamp((prog - fadeInStart) / (center - fadeInStart), 0, 1);
+          const fadeIn  = clamp((prog - fadeInStart) / (dwellStart - fadeInStart), 0, 1);
           const fadeOut = j < PANEL_COUNT - 1
-            ? clamp(1 - (prog - center) / (fadeOutEnd - center), 0, 1)
+            ? clamp(1 - (prog - dwellEnd) / (fadeOutEnd - dwellEnd), 0, 1)
             : 1;
           const opacity = Math.min(fadeIn, fadeOut);
           // Quantise to 1/256 steps to avoid unnecessary repaints
@@ -490,7 +496,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
   return (
     <>
-      <div ref={driverRef} className="relative h-[780vh]" data-wave-scroll-driver>
+      <div ref={driverRef} className="relative h-[1200vh]" data-wave-scroll-driver>
         <div
           className={cn(
             "sticky top-0 h-screen overflow-hidden",

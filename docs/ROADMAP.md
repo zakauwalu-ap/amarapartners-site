@@ -1,6 +1,6 @@
 # Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 1 April 2026 (Phase 4 complete)
+> **Last updated:** 2 April 2026 (Phase 4 complete + scroll polish)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 15 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -92,6 +92,8 @@ Based on the video recording of the site as of 1 April 2026, here is what is wor
 - ~~The wave sections (Firm Introduction through Footer) are empty.~~ **Resolved in Phase 4.**
 - ~~The page ends abruptly after the scroll driver. There is no footer, no CTA section.~~ **Resolved in Phase 4.**
 - ~~The section label badge feels like debug UI.~~ **Resolved — badge removed in Phase 4.**
+- ~~Section content panels had zero dwell time — each panel reached peak opacity and immediately faded out.~~ **Resolved — flat-top dwell curve added (2 Apr 2026).**
+- ~~Scroll was native/abrupt with no inertia.~~ **Resolved — Lenis smooth scroll integrated (2 Apr 2026).**
 - The nav still uses "Amara & Partners" as plain text rather than the SVG logo (noted as placeholder in code comments).
 - The wave turbulence animation (`ENABLE_WAVE_UNDULATION`) and pointer interaction (`ENABLE_WAVE_INTERACTION`) are both disabled. This is fine for now but is a polish item.
 - No inner pages exist yet. Every nav link other than Home leads nowhere.
@@ -149,6 +151,24 @@ Each scroll zone in the 780vh driver now has a solid-background content panel. P
 
 **4.8 - Wave Section Narrative Panels (Optional / Deferred)**
 - [ ] `WaveSectionPanel` component and `waveSections.ts` data remain unused. Deferred indefinitely — the named section components fulfil this role.
+
+---
+
+### Scroll Polish (Complete — 2 April 2026)
+
+Addressed between Phase 4 and Phase 5 as a standalone improvement session.
+
+**Architecture decisions recorded:**
+- Lenis v1.3.21 chosen over GSAP ScrollSmoother (free, open-source, industry standard for Next.js; ScrollSmoother requires a paid Club GSAP licence).
+- `autoRaf: false` on the Lenis instance — GSAP's ticker drives Lenis RAF instead of Lenis running its own loop. This keeps Lenis and ScrollTrigger on the exact same animation frame, eliminating jitter.
+- `LenisProvider` (`src/components/providers/LenisProvider.tsx`) wraps the root layout. An inner `LenisGsapSync` component (inside the ReactLenis context) wires `ScrollTrigger.update` as a scroll listener and adds `lenis.raf` to `gsap.ticker`. `gsap.ticker.lagSmoothing(0)` prevents timestamp clamping after tab switches.
+- `prefers-reduced-motion` respected: Lenis is skipped entirely and children render with native scroll.
+
+- [x] Install `lenis` (v1.3.21)
+- [x] Build `LenisProvider` at `src/components/providers/LenisProvider.tsx` — `root` mode, `lerp: 0.05` (luxurious inertia), `autoRaf: false`, GSAP ticker sync, reduced-motion fallback
+- [x] Wrap root layout body with `LenisProvider`
+- [x] Increase scroll driver from `780vh` to `1200vh` — each zone is now ~200vh, wave departures scale proportionally and feel more gradual
+- [x] Replace zero-dwell peak opacity curve with a flat-top dwell curve: ~90vh ramp-in → ~80vh hold at full opacity → ~90vh ramp-out per section
 
 ---
 

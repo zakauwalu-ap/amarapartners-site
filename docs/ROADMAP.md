@@ -190,6 +190,42 @@ Architecture decision: sections restored inside the sticky viewport, but the tra
 - Panel backgrounds changed to semi-transparent + `backdrop-blur` (e.g. `bg-cream/80 backdrop-blur-xl`) so wave layers remain partially visible beneath each content panel, reinforcing the depth-layering concept rather than covering waves completely.
 - Driver reduced from `1000vh` → `700vh` to eliminate excessive dead scroll at the CTA and before the footer.
 
+**Path C — Fixed wave background + normal-flow sections (3 April 2026):**
+
+The sticky-viewport / panel-crossfade approach (even with translateY + opacity transitions) was still fundamentally a slideshow. Panels were `absolute inset-0` inside a sticky viewport — only one was ever visible. Users never physically scrolled past content.
+
+**Why Path B failed:** Sections were placed in normal flow *below* a 700vh scroll driver. Users had to scroll through the entire wave animation sequence before reaching any content.
+
+**Why Path C succeeds:** It runs both systems *concurrently* — waves animate in the background as users scroll through content that's in normal document flow from the start.
+
+Architecture decision (Path C): waves become a `position: fixed` background layer; content sections live in normal document flow above it.
+
+- [x] `WaveSystem` wave layers render in a `fixed inset-0 z-0` container (always behind everything, `pointer-events-none`).
+- [x] Hero section (logo + eyebrow) is the first normal-flow section (100vh, transparent background — waves fully visible behind it). Hero content fades out in the first ~12% of total scroll progress.
+- [x] Five content sections sit in normal document flow inside a `relative z-10` wrapper. Each has a semi-transparent background + `backdrop-blur` so waves remain subtly visible (cream/90, wave-700/90, wave-500/88, wave-600/90, wave-700/92).
+- [x] Wave layer departure timing is unchanged — driven by total page scroll progress via a ScrollTrigger on the content wrapper (same scroll distance as the old 600vh driver since natural content height is ~600vh).
+- [x] Section components updated: `h-full` → `min-h-screen` for natural sizing in normal flow.
+- [x] Footer gets `relative z-10` to sit above the fixed wave background.
+- [x] Scroll driver div, sticky viewport, panel crossfade logic (PANEL_COUNT, ZONE_STEP, PANEL_ENTER_Y, PANEL_EXIT_Y), and all panel refs removed entirely.
+- [x] `AnimateIn` component preserved for potential use in Phase 6 (inner-content entrance animations).
+- [x] Reduced-motion fallback updated to render sections in normal flow with solid backgrounds (no blur/transparency needed since no animated waves).
+
+**Path C refinement — gradient-masked glass panels (3 April 2026):**
+
+With Path C's semi-transparent section backgrounds at 88-92% opacity plus heavy `backdrop-blur-lg/xl`, the wave animation was effectively invisible. Each section looked like a solid-coloured block.
+
+Architecture change: section wrappers now use a **split background/content layer** pattern with a **vertical gradient mask** (`mask-fade-y`).
+
+- [x] Each `<section>` contains two child divs: a background layer (`absolute inset-0`) and a content layer (`relative`).
+- [x] Background layer carries the tinted colour + `backdrop-blur-sm` (8px, down from 16-24px) + `mask-fade-y` CSS utility.
+- [x] `mask-fade-y` applies `mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)` — top and bottom 15% of each section fade to transparent, revealing the wave animation between sections.
+- [x] Content layer sits above the background at full opacity — text is never masked or blurred.
+- [x] Opacity reduced significantly: cream/60 (FirmIntro), wave-700/60 (Pillars), wave-500/55 (Insights), wave-600/60 (Jurisdictions), wave-700/65 (CTA). Down from 88-92%.
+- [x] Utility class `.mask-fade-y` defined in `globals.css` (with `-webkit-` prefix for Safari).
+- [x] Result: waves are clearly visible between sections (transparent edges), subtly visible through section centres, and text readability is preserved.
+- [x] Footer unchanged — solid `bg-wave-700` as the deepest layer endpoint.
+- [x] Reduced-motion fallback unchanged (solid backgrounds, no waves to show).
+
 ---
 
 ### Phase 5: Inner Pages

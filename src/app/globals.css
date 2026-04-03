@@ -117,4 +117,12 @@
     transform: scale(2.4);
     background-color: var(--color-brand-gold);
   }
+
+  /* Vertical fade mask — section background layers fade to transparent
+     at the top and bottom edges, revealing the wave animation between
+     content sections. Content sits in a separate div above, unmasked. */
+  .mask-fade-y {
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+  }
 }

@@ -22,7 +22,7 @@ const STATS: StatItem[] = [
 
 export function FirmIntro() {
   return (
-    <div className="flex h-full flex-col justify-center px-[8vw] py-[10vh]">
+    <div className="flex min-h-screen flex-col justify-center px-[8vw] py-[10vh]">
 
       {/* Eyebrow */}
       <p className="mb-6 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-wave-400">

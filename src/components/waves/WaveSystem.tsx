@@ -18,23 +18,9 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// -----------------------------------------------------------------------------
-// Scroll + mask behaviour (ported from wave-prototype-v3-opt.html)
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Content panel constants
-// 7 visual zones (hero + 5 sections + implied footer), 6 intervals.
-// ZONE_STEP is the scroll-progress width of each zone.
-// Panels enter from PANEL_ENTER_Y px below, exit PANEL_EXIT_Y px upward —
-// the directional motion prevents the "slideshow" feel that pure crossfades create.
-// -----------------------------------------------------------------------------
-const PANEL_COUNT  = 5;
-// Denominator 5.5 (not 6) shifts the CTA zone's "fully visible" point to ~87%
-// of the driver, leaving only ~76vh of dead hold at 600vh instead of 140vh.
-const ZONE_STEP    = 1 / 5.5;
-const PANEL_ENTER_Y = 60; // px — panel rises up from this offset on entry
-const PANEL_EXIT_Y  = -30; // px — panel continues upward by this amount on exit
+// ---------------------------------------------------------------------------
+// Wave behaviour constants (ported from wave-prototype-v3-opt.html)
+// ---------------------------------------------------------------------------
 
 const WAVE_CY = [0.86, 0.8, 0.74, 0.68, 0.62, 0.56, 0.5] as const;
 const BASE_SCALE = 5;
@@ -54,8 +40,6 @@ const DIRECTION_PATTERN: readonly { dx: number; dy: number }[] = [
   { dx: 1, dy: 0 },
   { dx: 0, dy: 1 },
 ];
-
-
 
 const TURBULENCE_CFG = [
   {
@@ -111,6 +95,7 @@ const WAVE_FILLS = [
   "#7BA3C9",
   "#B8CCDE",
 ] as const;
+
 /** Primary grey lockup — viewBox 252×144 in source SVG. */
 const HERO_LOGO_SRC = "/images/logo/A&P_logo_grey_primary_RGB.svg";
 
@@ -134,7 +119,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [finePointer, setFinePointer] = useState(false);
 
-  const driverRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const heroContentRef = useRef<HTMLDivElement | null>(null);
   const scrollHintRef = useRef<HTMLDivElement | null>(null);
   const dispLabelRef = useRef<HTMLDivElement | null>(null);
@@ -146,11 +131,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const maskCache = useRef<string[]>([]);
   const prevLayerT = useRef<number[]>([]);
   const prevHeroO = useRef<number>(-1);
-
-  // One ref per content panel; tracks last-written opacity + translateY so we
-  // skip DOM writes when quantised values haven't changed.
-  const sectionPanelRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const prevPanelState = useRef<{ opacity: number; translateY: number }[]>([]);
 
   const curScales = useRef<number[]>([]);
   const tgtScales = useRef<number[]>([]);
@@ -175,10 +155,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     prevLayerT.current = Array.from({ length: waveCount }, () => -1);
     curScales.current = Array.from({ length: waveCount }, () => BASE_SCALE);
     tgtScales.current = Array.from({ length: waveCount }, () => BASE_SCALE);
-    prevPanelState.current = Array.from({ length: PANEL_COUNT }, () => ({
-      opacity: -1,
-      translateY: 0,
-    }));
   }, [waveCount]);
 
   const mouseX = useRef(0);
@@ -187,9 +163,12 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
   const mouseVisible = useRef(true);
   const cursorOnWave = useRef(false);
 
-  const setLayerRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
-    layerRefs.current[i] = el;
-  }, []);
+  const setLayerRef = useCallback(
+    (i: number) => (el: HTMLDivElement | null) => {
+      layerRefs.current[i] = el;
+    },
+    []
+  );
 
   const setDispRef = useCallback(
     (i: number) => (el: SVGFEDisplacementMapElement | null) => {
@@ -197,11 +176,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     },
     []
   );
-
-
-  const setPanelRef = useCallback((i: number) => (el: HTMLDivElement | null) => {
-    sectionPanelRefs.current[i] = el;
-  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(pointer: fine)");
@@ -249,14 +223,15 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     el.style.webkitMaskImage = grad;
   }
 
+  // ── Wave departure + hero fade — driven by total page scroll progress ────
   useEffect(() => {
     if (prefersReducedMotion) return;
 
-    const driver = driverRef.current;
-    if (!driver) return;
+    const content = contentRef.current;
+    if (!content) return;
 
     const scrollTriggerInstance = ScrollTrigger.create({
-      trigger: driver,
+      trigger: content,
       start: "top top",
       end: "bottom bottom",
       invalidateOnRefresh: true,
@@ -265,9 +240,10 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
         const vw = window.innerWidth;
         const vh = window.innerHeight;
 
+        // Hero content fades in the first ~12% of total scroll (~60vh)
         const heroO =
           Math.round(
-            (1 - ease(clamp(prog / 0.07, 0, 1))) * 1000
+            (1 - ease(clamp(prog / 0.12, 0, 1))) * 1000
           ) / 1000;
         if (heroO !== prevHeroO.current) {
           prevHeroO.current = heroO;
@@ -279,16 +255,19 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           }
         }
 
+        // Wave layer departures — timing unchanged from the original driver
         for (let i = 0; i < waveCount; i++) {
           const dep = departures[i];
-          const raw = clamp((prog - dep.start) / (dep.end - dep.start), 0, 1);
+          const raw = clamp(
+            (prog - dep.start) / (dep.end - dep.start),
+            0,
+            1
+          );
           const t = ease(raw);
           const qt = ((t * 256) | 0) / 256;
           const layerEl = layerRefs.current[i];
           if (!layerEl) continue;
 
-          // Always update mask even when transform quantization doesn't change,
-          // otherwise stale mask gradients can leave a visible seam near nav.
           updateMask(i, dep.dx, dep.dy, raw, layerEl);
 
           if (qt !== prevLayerT.current[i]) {
@@ -299,51 +278,6 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             layerEl.style.opacity = String(1 - qt * 0.3);
           }
         }
-
-        // ── Section content panel opacity + slide-up motion ──────────────────
-        // Each panel (j=0..4) maps to zone z=j+1.
-        //
-        // Transition shape per panel:
-        //   fadeInStart → dwellStart : slides up from +60px while fading in
-        //   dwellStart  → dwellEnd   : fully visible, no transform (~80vh hold)
-        //   dwellEnd    → fadeOutEnd : continues upward –30px while fading out
-        //
-        // The directional motion (rise to enter, continue rising to exit) feels
-        // like genuine scrolling through a layered space — not a slide click.
-        // The last panel (CTA, j=4) never fades out; it stays through end of driver.
-        for (let j = 0; j < PANEL_COUNT; j++) {
-          const z = j + 1;
-          const fadeInStart = (z - 0.65) * ZONE_STEP;
-          const dwellStart  = (z - 0.2)  * ZONE_STEP;
-          const dwellEnd    = (z + 0.2)  * ZONE_STEP;
-          const fadeOutEnd  = (z + 0.65) * ZONE_STEP;
-
-          const enterProg = clamp((prog - fadeInStart) / (dwellStart - fadeInStart), 0, 1);
-          const exitProg  = j < PANEL_COUNT - 1
-            ? clamp((prog - dwellEnd) / (fadeOutEnd - dwellEnd), 0, 1)
-            : 0;
-
-          const easedEnter = ease(enterProg);
-          const easedExit  = ease(exitProg);
-
-          const opacity    = Math.min(easedEnter, 1 - easedExit);
-          const translateY = (1 - easedEnter) * PANEL_ENTER_Y + easedExit * PANEL_EXIT_Y;
-
-          // Quantise to limit DOM writes: opacity to 1/256, translateY to 0.5px
-          const qOpacity    = (Math.round(opacity    * 256) | 0) / 256;
-          const qTranslateY = Math.round(translateY  * 2)   / 2;
-
-          const el   = sectionPanelRefs.current[j];
-          const prev = prevPanelState.current[j];
-          if (el && prev && (qOpacity !== prev.opacity || qTranslateY !== prev.translateY)) {
-            prev.opacity    = qOpacity;
-            prev.translateY = qTranslateY;
-            el.style.opacity       = String(qOpacity);
-            el.style.transform     = `translateY(${qTranslateY}px)`;
-            el.style.pointerEvents = qOpacity > 0.5 ? "auto" : "none";
-          }
-        }
-
       },
     });
 
@@ -358,6 +292,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     };
   }, [departures, prefersReducedMotion, waveCount]);
 
+  // ── Displacement map + custom cursor RAF loop ────────────────────────────
   useEffect(() => {
     if (prefersReducedMotion) return;
 
@@ -413,6 +348,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     return () => cancelAnimationFrame(rafId);
   }, [prefersReducedMotion, enableCustomCursor, waveCount]);
 
+  // ── Mouse tracking (pointer interaction when enabled) ────────────────────
   useEffect(() => {
     if (prefersReducedMotion || !ENABLE_WAVE_INTERACTION) return;
 
@@ -444,71 +380,14 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
     };
   }, [prefersReducedMotion, waveCount]);
 
-    if (prefersReducedMotion) {
+  // ── Reduced motion fallback — static wave stack + normal-flow sections ───
+  if (prefersReducedMotion) {
     return (
-      <section
-        className="relative min-h-screen overflow-hidden bg-wave-100"
-        aria-label="Introduction"
-      >
-        <div className="pointer-events-none absolute inset-0 z-1">
-          <svg
-            className="block h-full w-full"
-            viewBox="0 0 1920 1080"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden
-          >
-            <rect width="1920" height="1080" fill="#B8CCDE" />
-          </svg>
-        </div>
-        {WAVE_PATHS.map((pathD, i) => (
-          <WaveLayer
-            key={`static-wave-${WAVE_FILLS[i]}`}
-            pathD={pathD}
-            fillHex={WAVE_FILLS[i]}
-            zIndex={i + 2}
-            turbulenceSeed={TURBULENCE_CFG[i].seed}
-            turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
-            turbulenceDurationSec={TURBULENCE_CFG[i].dur}
-            animateTurbulence={false}
-            pathOffsetY={WAVE_PATH_OFFSET_Y}
-          />
-        ))}
-        <div className="relative z-30 flex min-h-screen flex-col px-[8vw] pb-[9vh] pt-[7vh]">
-          <div className="mb-3">
-            <p className="font-body text-body-sm font-semibold uppercase tracking-[0.28em] text-wave-700/80">
-              Hero
-            </p>
-          </div>
-          <div className="flex shrink-0 justify-center">
-            <Image
-              src={HERO_LOGO_SRC}
-              alt="Amara & Partners Legal Consultants"
-              width={252}
-              height={144}
-              priority
-              className="h-auto w-[min(72vw,420px)] max-w-full"
-            />
-          </div>
-          <div className="flex min-h-0 flex-1 flex-col justify-end">
-            <p className="font-body text-[clamp(0.6rem,1.1vw,0.75rem)] font-normal uppercase tracking-[0.42em] text-wave-700/70">
-              {eyebrow}
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <>
-      <div ref={driverRef} className="relative h-[600vh]" data-wave-scroll-driver>
-        <div
-          className={cn(
-            "sticky top-0 h-screen overflow-hidden",
-            enableCustomCursor && "cursor-none"
-          )}
+      <>
+        <section
+          className="relative min-h-screen overflow-hidden bg-wave-100"
+          aria-label="Introduction"
         >
-          {/* Base wash — wave-100 */}
           <div className="pointer-events-none absolute inset-0 z-1">
             <svg
               className="block h-full w-full"
@@ -519,73 +398,107 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               <rect width="1920" height="1080" fill="#B8CCDE" />
             </svg>
           </div>
-
           {WAVE_PATHS.map((pathD, i) => (
             <WaveLayer
-              key={`wave-layer-${WAVE_FILLS[i]}`}
-              layerRef={setLayerRef(i)}
-              displacementRef={setDispRef(i)}
+              key={`static-wave-${WAVE_FILLS[i]}`}
               pathD={pathD}
               fillHex={WAVE_FILLS[i]}
               zIndex={i + 2}
               turbulenceSeed={TURBULENCE_CFG[i].seed}
               turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
               turbulenceDurationSec={TURBULENCE_CFG[i].dur}
-              animateTurbulence={ENABLE_WAVE_UNDULATION}
+              animateTurbulence={false}
               pathOffsetY={WAVE_PATH_OFFSET_Y}
             />
           ))}
-
-          {/* ── Section content panels ───────────────────────────────────────
-               Each panel sits at z-20, above all wave layers (z-2 to z-8) but
-               below the hero logo (z-30). Initial inline styles set the GSAP
-               start state (invisible, offset below) before the first scroll tick.
-               The scroll handler drives opacity + translateY on every frame.    */}
-
-          <div
-            ref={setPanelRef(0)}
-            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-cream/80 backdrop-blur-xl"
-          >
-            <FirmIntro />
+          <div className="relative z-30 flex min-h-screen flex-col px-[8vw] pb-[9vh] pt-[7vh]">
+            <div className="flex shrink-0 justify-center">
+              <Image
+                src={HERO_LOGO_SRC}
+                alt="Amara & Partners Legal Consultants"
+                width={252}
+                height={144}
+                priority
+                className="h-auto w-[min(72vw,420px)] max-w-full"
+              />
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col justify-end">
+              <p className="font-body text-[clamp(0.6rem,1.1vw,0.75rem)] font-normal uppercase tracking-[0.42em] text-wave-700/70">
+                {eyebrow}
+              </p>
+            </div>
           </div>
+        </section>
 
-          <div
-            ref={setPanelRef(1)}
-            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-700/80 backdrop-blur-lg"
-          >
-            <PillarCards />
-          </div>
+        <section className="bg-cream">
+          <FirmIntro />
+        </section>
+        <section className="bg-wave-700">
+          <PillarCards />
+        </section>
+        <section className="bg-wave-500">
+          <FeaturedInsights />
+        </section>
+        <section className="bg-wave-600">
+          <JurisdictionalReach />
+        </section>
+        <section className="bg-wave-700">
+          <CTAContact />
+        </section>
+      </>
+    );
+  }
 
-          <div
-            ref={setPanelRef(2)}
-            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-500/78 backdrop-blur-lg"
-          >
-            <FeaturedInsights />
-          </div>
+  // ── Main render ──────────────────────────────────────────────────────────
+  // Architecture: waves are a FIXED background layer (z-0). Content sections
+  // sit in normal document flow inside a z-10 wrapper and scroll naturally
+  // over the waves. Semi-transparent section backgrounds + backdrop-blur let
+  // the wave animation remain subtly visible through each section. This
+  // replaces the old sticky-viewport / panel-crossfade approach that felt
+  // like a slideshow.
+  return (
+    <>
+      {/* ── Fixed wave background — always visible behind all content ──── */}
+      <div
+        className={cn(
+          "pointer-events-none fixed inset-0 z-0 overflow-hidden",
+          enableCustomCursor && "cursor-none"
+        )}
+        aria-hidden="true"
+      >
+        <svg
+          className="block h-full w-full"
+          viewBox="0 0 1920 1080"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <rect width="1920" height="1080" fill="#B8CCDE" />
+        </svg>
 
-          <div
-            ref={setPanelRef(3)}
-            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-600/80 backdrop-blur-lg"
-          >
-            <JurisdictionalReach />
-          </div>
+        {WAVE_PATHS.map((pathD, i) => (
+          <WaveLayer
+            key={`wave-layer-${WAVE_FILLS[i]}`}
+            layerRef={setLayerRef(i)}
+            displacementRef={setDispRef(i)}
+            pathD={pathD}
+            fillHex={WAVE_FILLS[i]}
+            zIndex={i + 2}
+            turbulenceSeed={TURBULENCE_CFG[i].seed}
+            turbulenceKeyframes={TURBULENCE_CFG[i].keyframes}
+            turbulenceDurationSec={TURBULENCE_CFG[i].dur}
+            animateTurbulence={ENABLE_WAVE_UNDULATION}
+            pathOffsetY={WAVE_PATH_OFFSET_Y}
+          />
+        ))}
+      </div>
 
-          <div
-            ref={setPanelRef(4)}
-            style={{ opacity: 0, transform: `translateY(${PANEL_ENTER_Y}px)`, pointerEvents: "none" }}
-            className="absolute inset-0 z-20 overflow-hidden bg-wave-700/80 backdrop-blur-lg"
-          >
-            <CTAContact />
-          </div>
+      {/* ── Normal-flow content — scrolls naturally over the wave bg ───── */}
+      <div ref={contentRef} className="relative z-10">
 
-          {/* ── Hero content (logo + eyebrow) — fades out early in scroll ── */}
+        {/* Hero — full viewport, transparent so waves are fully visible */}
+        <section className="relative h-screen overflow-hidden">
           <div
             ref={heroContentRef}
-            className="pointer-events-none absolute inset-0 z-30 flex flex-col px-[8vw] pb-[9vh] pt-[7vh]"
+            className="pointer-events-none absolute inset-0 flex flex-col px-[8vw] pb-[9vh] pt-[7vh]"
           >
             <div className="flex shrink-0 justify-center">
               <Image
@@ -606,7 +519,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <div
             ref={scrollHintRef}
-            className="pointer-events-none absolute bottom-[5vh] inset-e-[6vw] z-30 flex items-center gap-3.5 opacity-0"
+            className="pointer-events-none absolute bottom-[5vh] inset-e-[6vw] flex items-center gap-3.5 opacity-0"
           >
             <div className="h-px w-12 origin-end bg-brand-gold" aria-hidden />
             <span className="font-body text-[0.58rem] uppercase tracking-[0.45em] text-wave-700/45">
@@ -616,14 +529,55 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
 
           <p
             ref={dispLabelRef}
-            className="wave-disp-label pointer-events-none absolute bottom-[5vh] inset-s-[8vw] z-30 font-body text-[0.58rem] uppercase tracking-[0.4em] text-brand-gold/0 transition-colors duration-600"
+            className="wave-disp-label pointer-events-none absolute bottom-[5vh] inset-s-[8vw] font-body text-[0.58rem] uppercase tracking-[0.4em] text-brand-gold/0 transition-colors duration-600"
           >
             Field active
           </p>
-        </div>
+        </section>
+
+        {/* Content sections — split into background layer + content layer.
+            The background div carries the tinted backdrop + mask-fade-y
+            (vertical gradient mask that fades to transparent at top/bottom
+            edges). This reveals the wave animation between sections and
+            lets it bleed through within sections, while keeping text
+            readable via the content div sitting on top at full opacity. */}
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-cream/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <FirmIntro />
+          </div>
+        </section>
+
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-wave-700/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <PillarCards />
+          </div>
+        </section>
+
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-wave-500/55 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <FeaturedInsights />
+          </div>
+        </section>
+
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-wave-600/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <JurisdictionalReach />
+          </div>
+        </section>
+
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-wave-700/65 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <CTAContact />
+          </div>
+        </section>
       </div>
 
-
+      {/* Custom cursor (only when wave interaction is enabled) */}
       {enableCustomCursor ? (
         <div
           ref={cursorRef}

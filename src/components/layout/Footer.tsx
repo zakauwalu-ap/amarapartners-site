@@ -84,7 +84,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-wave-700" aria-label="Site footer">
+    <footer className="relative z-10 bg-wave-700" aria-label="Site footer">
         <div className="mx-auto max-w-(--width-wide) px-[8vw]">
 
         {/* ── Top section: logo + strapline ─────────────────────────── */}

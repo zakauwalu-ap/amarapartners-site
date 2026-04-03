@@ -11,7 +11,7 @@ import { featuredInsights } from "@/data/insights";
 
 export function FeaturedInsights() {
   return (
-    <div className="flex h-full flex-col justify-center px-[8vw] py-[8vh]">
+    <div className="flex min-h-screen flex-col justify-center px-[8vw] py-[8vh]">
 
       {/* Section header */}
       <div className="mb-10 flex items-end justify-between gap-6">

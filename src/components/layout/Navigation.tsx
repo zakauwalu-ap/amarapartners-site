@@ -12,12 +12,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { MegaMenu } from "@/components/layout/nav/MegaMenu";
 import { MobileMenu } from "@/components/layout/nav/MobileMenu";
 import { navLinks } from "@/data/navigation";
 import { cn } from "@/lib/utils";
+
+const LOGO_GREY = "/images/logo/A&P_logo_grey_primary_RGB.svg";
+const LOGO_WHITE = "/images/logo/A&P_logo_white_primary_RGB.svg";
 
 export function Navigation() {
   // -------------------------------------------------------------------------
@@ -112,19 +116,31 @@ export function Navigation() {
           <Link
             href="/"
             onClick={() => setOpenMenu(null)}
-            className={cn(
-              "font-heading text-xl tracking-wide flex-shrink-0 transition-colors duration-300",
-              "min-w-0 max-w-[calc(100%-3.5rem)] pr-2 lg:max-w-none lg:pr-0",
-              // Logo text colour flips with scroll
-              isScrolled ? "text-cream" : "text-wave-700"
-            )}
+            className="relative shrink-0"
           >
-            {/*
-              PLACEHOLDER: Text logo until SVG files are provided.
-              In Phase 2 replace this with:
-              <Image src={isScrolled ? "/logo-white.svg" : "/logo-dark.svg"} ... />
-            */}
-            Amara & Partners
+            <Image
+              src={LOGO_GREY}
+              alt="Amara & Partners Legal Consultants"
+              width={252}
+              height={144}
+              priority
+              className={cn(
+                "h-10 lg:h-12 w-auto transition-opacity duration-300",
+                isScrolled && "opacity-0"
+              )}
+            />
+            <Image
+              src={LOGO_WHITE}
+              alt=""
+              width={252}
+              height={144}
+              priority
+              className={cn(
+                "absolute top-0 left-0 h-10 lg:h-12 w-auto transition-opacity duration-300",
+                isScrolled ? "opacity-100" : "opacity-0"
+              )}
+              aria-hidden="true"
+            />
           </Link>
 
           {/* ----------------------------------------------------------------

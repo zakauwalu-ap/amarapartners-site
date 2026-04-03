@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WAVE_PATHS } from "@/lib/wavePaths";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { Button } from "@/components/ui/Button";
 import { WaveLayer } from "@/components/waves/WaveLayer";
 import { FirmIntro } from "@/components/sections/FirmIntro";
 import { PillarCards } from "@/components/sections/PillarCards";
@@ -96,8 +97,7 @@ const WAVE_FILLS = [
   "#B8CCDE",
 ] as const;
 
-/** Primary grey lockup — viewBox 252×144 in source SVG. */
-const HERO_LOGO_SRC = "/images/logo/A&P_logo_grey_primary_RGB.svg";
+const HERO_IMAGE_SRC = "/images/sora-pics/organic-stone-abstract-2.png";
 
 function ease(t: number): number {
   if (t < 0.5) {
@@ -249,6 +249,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           prevHeroO.current = heroO;
           if (heroContentRef.current) {
             heroContentRef.current.style.opacity = String(heroO);
+            heroContentRef.current.style.pointerEvents = heroO < 0.1 ? "none" : "";
           }
           if (scrollHintRef.current) {
             scrollHintRef.current.style.opacity = String(heroO);
@@ -386,7 +387,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
       <>
         <section
           className="relative min-h-screen overflow-hidden bg-wave-100"
-          aria-label="Introduction"
+          aria-label="Hero"
         >
           <div className="pointer-events-none absolute inset-0 z-1">
             <svg
@@ -411,21 +412,38 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               pathOffsetY={WAVE_PATH_OFFSET_Y}
             />
           ))}
-          <div className="relative z-30 flex min-h-screen flex-col px-[8vw] pb-[9vh] pt-[7vh]">
-            <div className="flex shrink-0 justify-center">
-              <Image
-                src={HERO_LOGO_SRC}
-                alt="Amara & Partners Legal Consultants"
-                width={252}
-                height={144}
-                priority
-                className="h-auto w-[min(72vw,420px)] max-w-full"
-              />
-            </div>
-            <div className="flex min-h-0 flex-1 flex-col justify-end">
-              <p className="font-body text-[clamp(0.6rem,1.1vw,0.75rem)] font-normal uppercase tracking-[0.42em] text-wave-700/70">
-                {eyebrow}
-              </p>
+          <div className="relative z-30 flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20">
+            <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
+              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[46%]">
+                <div className="relative aspect-3/4 w-full overflow-hidden">
+                  <Image
+                    src={HERO_IMAGE_SRC}
+                    alt="Abstract organic stone formation"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              <div className="order-1 lg:order-2 lg:w-[54%]">
+                <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
+                  {eyebrow}
+                </p>
+                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
+                  Strategic Legal Counsel for a Dynamic Region
+                </h1>
+                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-shadow-grey">
+                  Amara & Partners delivers focused legal solutions across
+                  corporate transactions, disputes, and regulatory compliance
+                  — from the heart of Abu Dhabi to markets worldwide.
+                </p>
+                <div className="mt-8">
+                  <Button variant="primary" size="lg" href="/practice" arrow>
+                    Explore Our Practice
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -494,26 +512,44 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
       {/* ── Normal-flow content — scrolls naturally over the wave bg ───── */}
       <div ref={contentRef} className="relative z-10">
 
-        {/* Hero — full viewport, transparent so waves are fully visible */}
-        <section className="relative h-screen overflow-hidden">
+        {/* Hero — A&O Shearman–style split: image left, text right */}
+        <section className="relative min-h-screen overflow-hidden" aria-label="Hero">
           <div
             ref={heroContentRef}
-            className="pointer-events-none absolute inset-0 flex flex-col px-[8vw] pb-[9vh] pt-[7vh]"
+            className="flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20"
           >
-            <div className="flex shrink-0 justify-center">
-              <Image
-                src={HERO_LOGO_SRC}
-                alt="Amara & Partners Legal Consultants"
-                width={252}
-                height={144}
-                priority
-                className="h-auto w-[min(72vw,420px)] max-w-full"
-              />
-            </div>
-            <div className="flex min-h-0 flex-1 flex-col justify-end">
-              <p className="font-body text-[clamp(0.6rem,1.1vw,0.75rem)] font-normal uppercase tracking-[0.42em] text-wave-700/70">
-                {eyebrow}
-              </p>
+            <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
+              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[46%]">
+                <div className="relative aspect-3/4 w-full overflow-hidden">
+                  <Image
+                    src={HERO_IMAGE_SRC}
+                    alt="Abstract organic stone formation"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="order-1 lg:order-2 lg:w-[54%]">
+                <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
+                  {eyebrow}
+                </p>
+                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
+                  Strategic Legal Counsel for a Dynamic Region
+                </h1>
+                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-shadow-grey">
+                  Amara & Partners delivers focused legal solutions across
+                  corporate transactions, disputes, and regulatory compliance
+                  — from the heart of Abu Dhabi to markets worldwide.
+                </p>
+                <div className="mt-8">
+                  <Button variant="primary" size="lg" href="/practice" arrow>
+                    Explore Our Practice
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 

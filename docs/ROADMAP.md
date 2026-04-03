@@ -1,6 +1,6 @@
-# Amara & Partners Website - Project Roadmap
+﻿# Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 3 April 2026 (Phase 5 complete — practice area detail pages, People, legal placeholders; Phase 6 polish next)
+> **Last updated:** 3 April 2026 (Phase 6 in progress — nav logo swap + hero redesign done; polish continues)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion + Lenis
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -85,10 +85,11 @@ Amara & Partners Legal Consultants is a boutique firm based on Reem Island, Abu 
 - **Industries** “related practice” pills deep-link to those area pages (not only pillar landing pages).
 - **People** listing and five bio pages exist at `/people` and `/people/[slug]`; **no People link** in nav or footer (launch posture unchanged).
 - Home **wave hero** with Lenis-smooth scroll, semi-transparent content panels (translate + opacity), and global footer.
-- The bilingual primary logo renders cleanly in the hero.
+- **Nav logo**: primary bilingual SVG replaces the old text placeholder; grey/white variants crossfade on scroll.
+- **Hero**: A&O Shearman-style split layout (image left, text right) replaces the old centred logo. Uses `organic-stone-abstract-2.png` with positioning headline and gold CTA.
 
 **Outstanding (Phase 6+):**
-- Nav still uses **“Amara & Partners” text** instead of the SVG logo (placeholder).
+- **Hero headline and body copy** are placeholder positioning text — refine with firm-approved messaging before launch.
 - **`ENABLE_WAVE_UNDULATION`** and **`ENABLE_WAVE_INTERACTION`** remain off — polish when performance is validated.
 - **Placeholder content** everywhere (bios, legal pages, practice copy) — replace with firm-approved text before launch; legal pages carry an explicit draft notice in UI.
 - **Privacy / Terms** must be reviewed and replaced by counsel; footer links already point to the routes.
@@ -302,10 +303,18 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [ ] Add scroll-triggered entrance animations (fade-up, stagger) to all inner page sections using GSAP ScrollTrigger
 - [ ] Verify all animations respect `prefers-reduced-motion`
 
-**6.2 - Navigation Logo Swap**
-- [ ] Replace "Amara & Partners" text with the actual SVG logo in the nav
-- [ ] Use grey variant on transparent nav, white variant on solid dark nav
-- [ ] Test at all breakpoints
+**6.2 - Navigation Logo Swap ✓ Complete**
+- [x] Replaced "Amara & Partners" text with the primary bilingual SVG logo in both desktop nav and mobile menu
+- [x] Grey variant on transparent nav, white variant crossfades in on solid dark nav (scroll past 80px)
+- [x] Mobile menu uses white variant on wave-700 background
+
+**6.2b - Hero Redesign ✓ Complete**
+- [x] Removed centred logo from hero section (logo now lives in nav)
+- [x] Rebuilt hero as A&O Shearman–style split layout: image left, text right (desktop); text above, image below (mobile)
+- [x] Hero image: `organic-stone-abstract-2.png` from `public/images/sora-pics/` in a 3:4 portrait container
+- [x] Hero text: eyebrow, headline ("Strategic Legal Counsel for a Dynamic Region"), positioning paragraph, gold CTA
+- [x] Reduced-motion fallback updated to match new layout
+- [x] GSAP scroll fade preserved; pointer-events toggled off when hero opacity drops below threshold
 
 **6.3 - Mobile Responsiveness Audit**
 - [ ] Test every page at 320px, 375px, 414px, 768px, 1024px, 1440px

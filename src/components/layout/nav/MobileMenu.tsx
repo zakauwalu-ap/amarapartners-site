@@ -13,6 +13,7 @@
 
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,9 +52,15 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <Link
                 href="/"
                 onClick={onClose}
-                className="font-heading text-xl text-cream tracking-wide"
+                className="shrink-0"
               >
-                Amara & Partners
+                <Image
+                  src="/images/logo/A&P_logo_white_primary_RGB.svg"
+                  alt="Amara & Partners Legal Consultants"
+                  width={252}
+                  height={144}
+                  className="h-10 w-auto"
+                />
               </Link>
 
               {/* Close button */}

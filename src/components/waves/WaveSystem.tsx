@@ -97,7 +97,7 @@ const WAVE_FILLS = [
   "#B8CCDE",
 ] as const;
 
-const HERO_IMAGE_SRC = "/images/sora-pics/organic-stone-abstract-2.png";
+const HERO_IMAGE_SRC = "/images/sora-pics/golden-waves-blue-serenity.png";
 
 function ease(t: number): number {
   if (t < 0.5) {
@@ -418,7 +418,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
                   <Image
                     src={HERO_IMAGE_SRC}
-                    alt="Abstract organic stone formation"
+                    alt="Golden light over serene blue waves"
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 42vw"
@@ -430,7 +430,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
                   {eyebrow}
                 </p>
-                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
+                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-brand-gold">
                   Strategic Legal Counsel for a Dynamic Region
                 </h1>
                 <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">
@@ -523,7 +523,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
                   <Image
                     src={HERO_IMAGE_SRC}
-                    alt="Abstract organic stone formation"
+                    alt="Golden light over serene blue waves"
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 42vw"
@@ -536,7 +536,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
                   {eyebrow}
                 </p>
-                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
+                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-brand-gold">
                   Strategic Legal Counsel for a Dynamic Region
                 </h1>
                 <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">

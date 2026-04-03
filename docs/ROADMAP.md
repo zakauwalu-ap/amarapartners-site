@@ -1,6 +1,6 @@
 ﻿# Amara & Partners Website - Project Roadmap
 
-> **Last updated:** 3 April 2026 (Phase 6 in progress — nav logo swap + hero redesign done; polish continues)
+> **Last updated:** 3 April 2026 (Phase 6 in progress — nav logo swap + hero redesign + hero visual polish done; polish continues)
 > **Project:** Ground-up rebuild of amarapartners.ae
 > **Stack:** Next.js 16 (App Router) + TypeScript + Tailwind CSS v4 + GSAP + Framer Motion + Lenis
 > **Deployment:** Vercel (production), Dokploy (staging)
@@ -85,8 +85,8 @@ Amara & Partners Legal Consultants is a boutique firm based on Reem Island, Abu 
 - **Industries** “related practice” pills deep-link to those area pages (not only pillar landing pages).
 - **People** listing and five bio pages exist at `/people` and `/people/[slug]`; **no People link** in nav or footer (launch posture unchanged).
 - Home **wave hero** with Lenis-smooth scroll, semi-transparent content panels (translate + opacity), and global footer.
-- **Nav logo**: primary bilingual SVG replaces the old text placeholder; grey/white variants crossfade on scroll.
-- **Hero**: A&O Shearman-style split layout (image left, text right) replaces the old centred logo. Uses `organic-stone-abstract-2.png` with positioning headline and gold CTA.
+- **Nav logo**: primary bilingual SVG at `h-12 lg:h-16` in a `h-20` nav bar; grey/white variants crossfade on scroll.
+- **Hero**: A&O Shearman-style split layout (image left, text right) replaces the old centred logo. Uses `organic-stone-abstract-2.png` in a 4:5 portrait container (capped at `100vh - 12rem`) with positioning headline and gold CTA. Body copy uses `text-wave-600` for strong contrast against the wave-100 background.
 
 **Outstanding (Phase 6+):**
 - **Hero headline and body copy** are placeholder positioning text — refine with firm-approved messaging before launch.
@@ -315,6 +315,14 @@ Each page uses a shared `PageHeader` component at the top, then page-specific co
 - [x] Hero text: eyebrow, headline ("Strategic Legal Counsel for a Dynamic Region"), positioning paragraph, gold CTA
 - [x] Reduced-motion fallback updated to match new layout
 - [x] GSAP scroll fade preserved; pointer-events toggled off when hero opacity drops below threshold
+
+**6.2c - Hero Visual Polish ✓ Complete**
+- [x] Hero image aspect ratio changed from `aspect-3/4` to `aspect-4/5` — less tall, fits within the viewport
+- [x] Image column narrowed from `lg:w-[46%]` to `lg:w-[42%]` for better proportions
+- [x] Added `max-h-[calc(100vh-12rem)]` to image container — prevents overflow on any screen size
+- [x] Body text changed from `text-shadow-grey` (#565E71, ~4:1 contrast) to `text-wave-600` (#0D2E5C, ~8.2:1 contrast) — passes WCAG AA
+- [x] Nav logo increased from `h-10 lg:h-12` to `h-12 lg:h-16` for legibility; nav bar height bumped from `h-16` to `h-20`
+- [x] All changes applied to both main render and reduced-motion fallback
 
 **6.3 - Mobile Responsiveness Audit**
 - [ ] Test every page at 320px, 375px, 414px, 768px, 1024px, 1440px

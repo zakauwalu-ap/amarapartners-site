@@ -108,7 +108,7 @@ export function Navigation() {
           navBg
         )}
       >
-        <nav className="relative max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <nav className="relative max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
           {/* ----------------------------------------------------------------
               LEFT: Logo
@@ -125,7 +125,7 @@ export function Navigation() {
               height={144}
               priority
               className={cn(
-                "h-10 lg:h-12 w-auto transition-opacity duration-300",
+                "h-12 lg:h-16 w-auto transition-opacity duration-300",
                 isScrolled && "opacity-0"
               )}
             />
@@ -136,7 +136,7 @@ export function Navigation() {
               height={144}
               priority
               className={cn(
-                "absolute top-0 left-0 h-10 lg:h-12 w-auto transition-opacity duration-300",
+                "absolute top-0 left-0 h-12 lg:h-16 w-auto transition-opacity duration-300",
                 isScrolled ? "opacity-100" : "opacity-0"
               )}
               aria-hidden="true"

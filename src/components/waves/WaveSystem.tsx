@@ -414,14 +414,14 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
           ))}
           <div className="relative z-30 flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20">
             <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
-              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[46%]">
-                <div className="relative aspect-3/4 w-full overflow-hidden">
+              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[42%]">
+                <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
                   <Image
                     src={HERO_IMAGE_SRC}
                     alt="Abstract organic stone formation"
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    sizes="(max-width: 1024px) 100vw, 42vw"
                     className="object-cover"
                   />
                 </div>
@@ -433,7 +433,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
                   Strategic Legal Counsel for a Dynamic Region
                 </h1>
-                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-shadow-grey">
+                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">
                   Amara & Partners delivers focused legal solutions across
                   corporate transactions, disputes, and regulatory compliance
                   — from the heart of Abu Dhabi to markets worldwide.
@@ -519,14 +519,14 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             className="flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20"
           >
             <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
-              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[46%]">
-                <div className="relative aspect-3/4 w-full overflow-hidden">
+              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[42%]">
+                <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
                   <Image
                     src={HERO_IMAGE_SRC}
                     alt="Abstract organic stone formation"
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    sizes="(max-width: 1024px) 100vw, 42vw"
                     className="object-cover"
                   />
                 </div>
@@ -539,7 +539,7 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
                 <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-wave-700">
                   Strategic Legal Counsel for a Dynamic Region
                 </h1>
-                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-shadow-grey">
+                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">
                   Amara & Partners delivers focused legal solutions across
                   corporate transactions, disputes, and regulatory compliance
                   — from the heart of Abu Dhabi to markets worldwide.

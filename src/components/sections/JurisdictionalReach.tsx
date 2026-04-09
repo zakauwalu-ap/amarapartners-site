@@ -1,17 +1,15 @@
 // =============================================================================
 // src/components/sections/JurisdictionalReach.tsx
 // =============================================================================
-// Zone 4 of the WaveSystem scroll driver.
-// Deep navy (wave-600) background. Three-column jurisdiction layout.
-// Explains the firm's coverage across Mainland UAE, ADGM, and DIFC.
+// Home — three legal frameworks (mainland, ADGM, DIFC).
 // =============================================================================
 
 interface JurisdictionItem {
-  code: string;         // Short identifier shown large
-  name: string;         // Full name
-  framework: string;    // Legal framework descriptor
-  description: string;  // One-sentence explainer
-  keyPoints: string[];  // 3 short bullet points
+  code: string;
+  name: string;
+  framework: string;
+  description: string;
+  keyPoints: string[];
 }
 
 const JURISDICTIONS: JurisdictionItem[] = [
@@ -35,7 +33,7 @@ const JURISDICTIONS: JurisdictionItem[] = [
       "An independent financial free zone on Al Maryah Island, operating under English common law with its own courts and regulatory authority.",
     keyPoints: [
       "FSRA-regulated entities",
-      "ADGM Courts & ADGM Arbitration Centre",
+      "ADGM Courts & Arbitration Centre",
       "Fund, SPV & holding structures",
     ],
   },
@@ -57,24 +55,24 @@ export function JurisdictionalReach() {
   return (
     <div className="flex min-h-screen flex-col justify-center px-[8vw] py-[8vh]">
 
-      {/* Section header */}
       <div className="mb-10">
         <p className="mb-3 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-wave-200/60">
-          Where we work
+          Jurisdictions
         </p>
         <h2 className="max-w-[28ch] font-heading text-display-md leading-[1.08] text-wave-100">
-          One team. Three legal frameworks.
+          One country, three legal systems.
         </h2>
+        <p className="mt-5 max-w-[52ch] font-body text-body-lg leading-relaxed text-wave-200/75">
+          Each with its own courts, regulators, and legislation. We practise across all of them.
+        </p>
       </div>
 
-      {/* Jurisdiction columns */}
       <div className="grid grid-cols-1 gap-px bg-wave-400/30 md:grid-cols-3">
         {JURISDICTIONS.map((j) => (
           <div
             key={j.code}
             className="flex flex-col gap-4 bg-wave-600 px-6 py-7 transition-colors duration-300 hover:bg-wave-500/60"
           >
-            {/* Code — large, decorative */}
             <span
               aria-hidden="true"
               className="font-heading text-display-lg leading-none text-wave-400/40"
@@ -82,7 +80,6 @@ export function JurisdictionalReach() {
               {j.code}
             </span>
 
-            {/* Name + framework */}
             <div>
               <h3 className="font-heading text-display-md leading-tight text-wave-100">
                 {j.name}
@@ -92,15 +89,12 @@ export function JurisdictionalReach() {
               </p>
             </div>
 
-            {/* Gold rule */}
             <div className="h-px w-10 bg-brand-gold/50" aria-hidden="true" />
 
-            {/* Description */}
             <p className="font-body text-body-sm leading-relaxed text-wave-100/70">
               {j.description}
             </p>
 
-            {/* Key points */}
             <ul className="mt-auto flex flex-col gap-2" aria-label={`${j.name} key points`}>
               {j.keyPoints.map((point) => (
                 <li

@@ -36,7 +36,7 @@ interface ValueItem {
 
 const VALUES: ValueItem[] = [
   {
-    title: "Institutional Judgment",
+    title: "Institutional Judgement",
     description:
       "We bring the discipline and rigour of top-tier international practice to every matter — regardless of scale.",
   },
@@ -75,7 +75,7 @@ export default function AboutPage() {
       <PageHeader
         title="About the Firm"
         eyebrow="Our Story"
-        subtitle="A boutique legal consultancy built on institutional judgment, regional depth, and a direct commitment to every client mandate."
+        subtitle="A boutique legal consultancy built on institutional judgement, regional depth, and a direct commitment to every client mandate."
         breadcrumb={[
           { label: "Home", href: "/" },
           { label: "About" },
@@ -109,9 +109,8 @@ export default function AboutPage() {
                 <p className="mb-6 font-body text-body-lg leading-relaxed text-shadow-grey">
                   Amara &amp; Partners was founded to fill a gap in the Abu Dhabi
                   market: a boutique firm that delivers the depth of international
-                  practice disciplines through the attention and intimacy of a
-                  specialist team. Where large firms offer breadth at scale, we
-                  offer depth at pace.
+                  practice disciplines with the attention of a specialist team. Where
+                  large firms offer breadth at scale, we offer depth at pace.
                 </p>
 
                 <p className="mb-6 font-body text-body-lg leading-relaxed text-shadow-grey">
@@ -123,8 +122,8 @@ export default function AboutPage() {
                 </p>
 
                 <p className="font-body text-body-lg leading-relaxed text-shadow-grey">
-                  We hold a simple belief: institutional-quality legal counsel
-                  should not require a global firm's structure. Our clients deserve
+                  We hold a simple belief. Institutional-quality legal counsel
+                  should not require a global firm&apos;s structure. Our clients deserve
                   advisers close enough to understand the nuance of their commercial
                   reality, and experienced enough to navigate its complexity.
                 </p>
@@ -267,8 +266,8 @@ export default function AboutPage() {
               <div>
                 <div className="mb-8 h-px w-16 bg-brand-gold" aria-hidden="true" />
                 <blockquote className="font-heading text-display-md italic leading-[1.15] text-wave-100">
-                  "A team that values depth over volume. We take fewer matters
-                  than a larger firm might, and we do each one fully."
+                  &ldquo;A team that values depth over volume. We take fewer matters
+                  than a larger firm might, and we do each one fully.&rdquo;
                 </blockquote>
               </div>
 
@@ -279,7 +278,7 @@ export default function AboutPage() {
                 </p>
 
                 <p className="mb-6 font-body text-body-lg leading-relaxed text-wave-200/80">
-                  That focus is not a constraint — it is our competitive
+                  That focus is not a constraint. It is our competitive
                   advantage. By limiting the number of matters we take on, each
                   client receives the undivided attention of an experienced team,
                   not delegation to a junior bench.

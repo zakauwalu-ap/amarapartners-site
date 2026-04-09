@@ -112,11 +112,11 @@ export const industryDetails: IndustryDetail[] = [
       "of disputes arising from scope, delay, and payment.",
     bodyText:
       "We advise developers, contractors, subcontractors, and consultants on the full lifecycle of " +
-      "engineering and construction engagements — from early procurement strategy and contract " +
+      "engineering and construction engagements, from early procurement strategy and contract " +
       "negotiation through to claims management and dispute resolution. Our team is experienced in " +
       "FIDIC, NEC, and bespoke UAE contract forms, and our disputes practice has handled some of the " +
-      "region's most complex construction arbitrations. We understand that construction disputes " +
-      "require a combination of technical comprehension and procedural discipline, and we bring both.",
+      "region's most complex construction arbitrations. Construction disputes require a combination of " +
+      "technical comprehension and procedural discipline. We bring both.",
     keyMatters: [
       {
         title: "Contract Structuring and Negotiation",
@@ -160,7 +160,7 @@ export const industryDetails: IndustryDetail[] = [
     tagline: "Upstream, midstream, and downstream advisory across the GCC energy sector.",
     description:
       "Abu Dhabi is home to some of the world's largest hydrocarbon reserves and an energy sector " +
-      "undergoing significant transformation — towards gas, renewables, and downstream value creation. " +
+      "undergoing significant transformation towards gas, renewables, and downstream value creation. " +
       "The legal landscape for energy projects spans concession agreements, joint venture structures, " +
       "and a complex web of regulatory approvals.",
     bodyText:
@@ -214,8 +214,8 @@ export const industryDetails: IndustryDetail[] = [
     description:
       "The UAE has established itself as the region's foremost technology and innovation hub, with " +
       "ADGM and DIFC both developing regulatory frameworks specifically designed to attract and retain " +
-      "technology businesses. The pace of regulatory change — particularly in data protection, AI " +
-      "governance, and fintech — demands advisers who can keep up.",
+      "technology businesses. The pace of regulatory change, particularly in data protection, AI " +
+      "governance, and fintech, demands advisers who can keep up.",
     bodyText:
       "We advise technology companies, media businesses, and telecommunications operators across the " +
       "spectrum of legal challenges that a digital-first regulatory environment presents. Our team " +

@@ -6,6 +6,7 @@
 // Three pillar cards sourced from the navigation data file.
 // =============================================================================
 
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { practicePillars } from "@/data/navigation";
 
@@ -16,10 +17,10 @@ export function PillarCards() {
       {/* Section header */}
       <div className="mb-10">
         <p className="mb-3 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-wave-200/70">
-          What we do
+          The Practice
         </p>
-        <h2 className="max-w-[22ch] font-heading text-display-md leading-[1.08] text-wave-100">
-          Three pillars. Twenty-two practice areas.
+        <h2 className="max-w-[26ch] font-heading text-display-md leading-[1.08] text-wave-100">
+          Three pillars. Twenty-two areas of focus.
         </h2>
       </div>
 
@@ -41,7 +42,9 @@ export function PillarCards() {
 
       {/* Subtle footer link */}
       <p className="mt-8 font-body text-body-sm text-wave-200/50">
-        View all {practicePillars.reduce((acc, p) => acc + p.areas.length, 0)} practice areas →
+        <Link href="/practice" className="transition-colors duration-200 hover:text-wave-100">
+          View all practice areas →
+        </Link>
       </p>
     </div>
   );

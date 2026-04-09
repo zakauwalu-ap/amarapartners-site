@@ -2,7 +2,6 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { WAVE_PATHS } from "@/lib/wavePaths";
 import { cn } from "@/lib/utils";
@@ -10,6 +9,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { Button } from "@/components/ui/Button";
 import { WaveLayer } from "@/components/waves/WaveLayer";
 import { FirmIntro } from "@/components/sections/FirmIntro";
+import { HomeIndustries } from "@/components/sections/HomeIndustries";
 import { PillarCards } from "@/components/sections/PillarCards";
 import { FeaturedInsights } from "@/components/sections/FeaturedInsights";
 import { JurisdictionalReach } from "@/components/sections/JurisdictionalReach";
@@ -97,7 +97,45 @@ const WAVE_FILLS = [
   "#B8CCDE",
 ] as const;
 
-const HERO_IMAGE_SRC = "/images/sora-pics/golden-waves-blue-serenity.png";
+const HERO_H1 = "Amara & Partners";
+const HERO_SUBHEADING =
+  "From first call to final signature, and everything that follows.";
+const HERO_REVEAL =
+  "Advising across jurisdictions and disciplines, with a focus on the complexity that sits between them.";
+
+interface HeroIntroContentProps {
+  eyebrow?: string;
+}
+
+/** Centered headline, supporting copy, and CTAs — shared by main and reduced-motion hero. */
+const HeroIntroContent = ({ eyebrow }: HeroIntroContentProps) => (
+  <div className="mx-auto w-full max-w-4xl text-center">
+    {eyebrow ? (
+      <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
+        {eyebrow}
+      </p>
+    ) : null}
+    <h1
+      className={`font-heading text-display-xl font-medium leading-[1.02] tracking-tight text-brand-gold sm:text-display-2xl md:leading-[1.05] ${eyebrow ? "mt-5" : ""}`}
+    >
+      {HERO_H1}
+    </h1>
+    <p className="mx-auto mt-8 max-w-2xl font-body text-body-xl leading-relaxed text-wave-700 md:mt-10">
+      {HERO_SUBHEADING}
+    </p>
+    <p className="mx-auto mt-5 max-w-2xl font-body text-body-md leading-relaxed text-wave-600 md:mt-6">
+      {HERO_REVEAL}
+    </p>
+    <div className="mt-10 flex flex-wrap items-center justify-center gap-4 md:mt-12 md:gap-5">
+      <Button variant="primary" size="lg" href="/practice" arrow>
+        Explore Our Practice
+      </Button>
+      <Button variant="secondary" size="lg" href="/contact">
+        Contact
+      </Button>
+    </div>
+  </div>
+);
 
 function ease(t: number): number {
   if (t < 0.5) {
@@ -112,7 +150,8 @@ function clamp(v: number, lo: number, hi: number): number {
 }
 
 export interface WaveSystemProps {
-  eyebrow: string;
+  /** Optional location line above the headline — omitted on the live home hero per editorial copy. */
+  eyebrow?: string;
 }
 
 export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
@@ -412,47 +451,19 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
               pathOffsetY={WAVE_PATH_OFFSET_Y}
             />
           ))}
-          <div className="relative z-30 flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20">
-            <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
-              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[42%]">
-                <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
-                  <Image
-                    src={HERO_IMAGE_SRC}
-                    alt="Golden light over serene blue waves"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 42vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-              <div className="order-1 lg:order-2 lg:w-[54%]">
-                <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
-                  {eyebrow}
-                </p>
-                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-brand-gold">
-                  Strategic Legal Counsel for a Dynamic Region
-                </h1>
-                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">
-                  Amara & Partners delivers focused legal solutions across
-                  corporate transactions, disputes, and regulatory compliance
-                  — from the heart of Abu Dhabi to markets worldwide.
-                </p>
-                <div className="mt-8">
-                  <Button variant="primary" size="lg" href="/practice" arrow>
-                    Explore Our Practice
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <div className="relative z-30 flex min-h-screen flex-col justify-center px-6 pt-24 pb-20 lg:px-[8vw] lg:pt-32 lg:pb-24">
+            <HeroIntroContent eyebrow={eyebrow} />
           </div>
         </section>
 
-        <section className="bg-cream">
-          <FirmIntro />
-        </section>
         <section className="bg-wave-700">
           <PillarCards />
+        </section>
+        <section className="bg-cream">
+          <HomeIndustries />
+        </section>
+        <section className="bg-cream">
+          <FirmIntro />
         </section>
         <section className="bg-wave-500">
           <FeaturedInsights />
@@ -512,45 +523,13 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
       {/* ── Normal-flow content — scrolls naturally over the wave bg ───── */}
       <div ref={contentRef} className="relative z-10">
 
-        {/* Hero — A&O Shearman–style split: image left, text right */}
+        {/* Hero — centered typographic block over the wave field */}
         <section className="relative min-h-screen overflow-hidden" aria-label="Hero">
           <div
             ref={heroContentRef}
-            className="flex min-h-screen items-center px-6 pt-24 pb-16 lg:px-[8vw] lg:pt-32 lg:pb-20"
+            className="flex min-h-screen flex-col justify-center px-6 pt-24 pb-20 lg:px-[8vw] lg:pt-32 lg:pb-24"
           >
-            <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-row lg:items-center lg:gap-16">
-              <div className="order-2 mt-10 lg:order-1 lg:mt-0 lg:w-[42%]">
-                <div className="relative aspect-4/5 max-h-[calc(100vh-12rem)] w-full overflow-hidden">
-                  <Image
-                    src={HERO_IMAGE_SRC}
-                    alt="Golden light over serene blue waves"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 42vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="order-1 lg:order-2 lg:w-[54%]">
-                <p className="font-body text-body-xs font-medium uppercase tracking-[0.3em] text-wave-500">
-                  {eyebrow}
-                </p>
-                <h1 className="mt-5 font-heading text-display-lg font-medium leading-[1.05] text-brand-gold">
-                  Strategic Legal Counsel for a Dynamic Region
-                </h1>
-                <p className="mt-6 max-w-xl font-body text-body-lg leading-relaxed text-wave-600">
-                  Amara & Partners delivers focused legal solutions across
-                  corporate transactions, disputes, and regulatory compliance
-                  — from the heart of Abu Dhabi to markets worldwide.
-                </p>
-                <div className="mt-8">
-                  <Button variant="primary" size="lg" href="/practice" arrow>
-                    Explore Our Practice
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <HeroIntroContent eyebrow={eyebrow} />
           </div>
 
           <div
@@ -578,16 +557,23 @@ export const WaveSystem = ({ eyebrow }: WaveSystemProps) => {
             lets it bleed through within sections, while keeping text
             readable via the content div sitting on top at full opacity. */}
         <section className="relative">
-          <div className="absolute inset-0 mask-fade-y bg-cream/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="absolute inset-0 mask-fade-y bg-wave-700/60 backdrop-blur-sm" aria-hidden="true" />
           <div className="relative">
-            <FirmIntro />
+            <PillarCards />
           </div>
         </section>
 
         <section className="relative">
-          <div className="absolute inset-0 mask-fade-y bg-wave-700/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="absolute inset-0 mask-fade-y bg-cream/60 backdrop-blur-sm" aria-hidden="true" />
           <div className="relative">
-            <PillarCards />
+            <HomeIndustries />
+          </div>
+        </section>
+
+        <section className="relative">
+          <div className="absolute inset-0 mask-fade-y bg-cream/60 backdrop-blur-sm" aria-hidden="true" />
+          <div className="relative">
+            <FirmIntro />
           </div>
         </section>
 

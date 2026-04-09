@@ -275,7 +275,7 @@ export default async function IndustryPage({
               <div>
                 <div className="mb-8 h-px w-16 bg-brand-gold" aria-hidden="true" />
                 <h2 className="font-heading text-display-md leading-tight text-wave-100">
-                  Advising on a {industry.name.toLowerCase()} matter?
+                  Advising on a {industry.name} matter?
                 </h2>
                 <p className="mt-5 font-body text-body-lg leading-relaxed text-wave-200/80">
                   We&apos;re available to discuss your specific circumstances

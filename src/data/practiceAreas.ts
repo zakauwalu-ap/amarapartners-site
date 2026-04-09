@@ -54,11 +54,10 @@ export const pillarDetails: PillarDetail[] = [
     slug: "corporate",
     tagline: "Structuring, financing, and executing complex transactions across the UAE and beyond.",
     description:
-      "Our Corporate & Transactions pillar advises on the full lifecycle of commercial activity — from " +
-      "incorporation and entity structuring through to complex cross-border deals and financing. We work " +
-      "with regional conglomerates, international investors, financial institutions, and family offices " +
-      "navigating the UAE's commercial, financial, and free zone landscape with the discipline and " +
-      "judgement that demanding mandates require.",
+      "Our Corporate & Transactions pillar advises on the full lifecycle of commercial activity, from " +
+      "incorporation and entity structuring through to complex cross-border deals. We work with regional " +
+      "conglomerates, international investors, financial institutions, and family offices navigating " +
+      "the UAE's commercial and free zone landscape with the discipline that demanding mandates require.",
     areas: [
       {
         name: "Corporate Commercial",
@@ -74,8 +73,8 @@ export const pillarDetails: PillarDetail[] = [
           "Whether you are establishing a new entity on the mainland, in ADGM, or in the DIFC, we align " +
             "your constitutional documents, commercial agreements, and regulatory filings with your " +
             "operating model and growth plans.",
-          "Our team supports ongoing corporate housekeeping — resolutions, capital changes, related-party " +
-            "transactions, and restructuring — so that your legal position keeps pace with the business.",
+          "Our team supports ongoing corporate housekeeping: resolutions, capital changes, related-party " +
+            "transactions, and restructuring. Your legal position keeps pace with the business.",
         ],
         highlights: [
           {
@@ -153,7 +152,7 @@ export const pillarDetails: PillarDetail[] = [
         slug: "free-zone-structuring",
         description:
           "Establishment advisory, licensing, regulatory structuring, and ongoing corporate governance " +
-          "for entities in Abu Dhabi's two leading international financial centres — the ADGM and the DIFC. " +
+          "for entities in Abu Dhabi's two leading international financial centres: the ADGM and the DIFC. " +
           "We advise on the optimal structure for each client's specific operational and commercial objectives.",
         body: [
           "ADGM and DIFC offer common-law courts, familiar corporate statutes, and regulatory frameworks " +
@@ -203,7 +202,7 @@ export const pillarDetails: PillarDetail[] = [
             "syndicated and project finance structures. We represent banks, non-bank lenders, sponsors, " +
             "and corporates with equal attention to documentation and enforceability.",
           "Our work covers conventional and Islamic structures, cross-border security, and interactions " +
-            "with mainland and free zone registries — ensuring that your security package and covenants " +
+            "with mainland and free zone registries. We ensure that your security package and covenants " +
             "match the underlying assets and cash flows.",
           "When facilities move into distress, we advise on enforcement strategy, intercreditor issues, " +
             "and consensual workouts alongside our disputes colleagues where needed.",
@@ -237,7 +236,7 @@ export const pillarDetails: PillarDetail[] = [
         name: "Islamic Finance",
         slug: "islamic-finance",
         description:
-          "Sharia-compliant financing structures including murabaha, ijara, sukuk, and musharaka — " +
+          "Sharia-compliant financing structures including murabaha, ijara, sukuk, and musharaka, " +
           "from initial structuring through to documentation and execution. We work closely with " +
           "Sharia supervisory boards to deliver legally sound and commercially viable structures.",
         body: [
@@ -286,9 +285,9 @@ export const pillarDetails: PillarDetail[] = [
             "ownership structures, escrow rules, and off-plan sale regimes. We help clients transact with " +
             "confidence whether they are acquiring a single asset or delivering a master development.",
           "We advise on sale and purchase agreements, development agreements, construction interfaces, and " +
-            "leasing — bridging the gap between legal risk and project economics.",
-          "Our work frequently intersects with financing, joint ventures, and dispute resolution, and we " +
-            "deploy integrated teams when mandates require it.",
+            "leasing. Our focus is bridging the gap between legal risk and project economics.",
+          "Our work frequently intersects with financing, joint ventures, and dispute resolution. We deploy " +
+            "integrated teams when mandates require it.",
         ],
         highlights: [
           {
@@ -330,8 +329,8 @@ export const pillarDetails: PillarDetail[] = [
             "when challenged.",
           "Our advisory spans UAE Ministry of Economy trade mark and patent filings, copyright strategy, " +
             "and licensing arrangements that work across your group entities and distribution networks.",
-          "When disputes arise, we coordinate enforcement strategy — from cease-and-desist through " +
-            "civil proceedings and border measures — with our disputes team.",
+          "When disputes arise, we coordinate enforcement strategy, from cease-and-desist through " +
+            "civil proceedings and border measures, with our disputes team.",
         ],
         highlights: [
           {
@@ -370,9 +369,9 @@ export const pillarDetails: PillarDetail[] = [
     description:
       "Our Disputes pillar handles complex commercial litigation and arbitration across the UAE's court " +
       "systems and leading arbitral institutions. We combine sharp procedural knowledge with commercial " +
-      "judgment — understanding that how a dispute resolves shapes the relationship, reputation, and " +
-      "commercial position that follows. We advise on strategy from the first warning sign, not just " +
-      "once proceedings have been issued.",
+      "judgement, understanding that how a dispute resolves shapes the relationship and commercial " +
+      "position that follows. We advise on strategy from the first warning sign, not just once " +
+      "proceedings have been issued.",
     areas: [
       {
         name: "Litigation",
@@ -384,10 +383,10 @@ export const pillarDetails: PillarDetail[] = [
         body: [
           "UAE onshore litigation requires procedural discipline and a clear-eyed view of how local " +
             "courts approach evidence, experts, and enforcement. We represent claimants and defendants " +
-            "in high-stakes commercial disputes from pre-action through final judgment.",
+            "in high-stakes commercial disputes from pre-action through final judgement.",
           "Our team advises on jurisdiction, governing law, and forum selection — including the " +
             "interaction between arbitration clauses and court proceedings where those issues are contested.",
-          "We handle interim applications, asset preservation, and judgment enforcement so that a " +
+          "We handle interim applications, asset preservation, and judgement enforcement so that a " +
             "successful outcome in court translates into practical recovery.",
         ],
         highlights: [
@@ -426,7 +425,7 @@ export const pillarDetails: PillarDetail[] = [
             "claimants and respondents in institutional and ad hoc proceedings seated in the UAE and " +
             "abroad, with a focus on procedural strategy and evidentiary presentation.",
           "Our experience covers construction, energy, M&A, joint ventures, and financial services " +
-            "disputes — aligning submissions with the expectations of leading arbitral tribunals.",
+            "disputes. We align submissions with the expectations of leading arbitral tribunals.",
           "We advise on annulment proceedings before UAE courts, recognition of foreign awards, and " +
             "post-award settlement where commercial sense points that way.",
         ],
@@ -461,7 +460,7 @@ export const pillarDetails: PillarDetail[] = [
           "and international forums. We approach mediation as a tool for achieving durable commercial " +
           "outcomes, not a procedural step before returning to litigation.",
         body: [
-          "Mediation can resolve disputes faster and more privately than full proceedings — when the " +
+          "Mediation can resolve disputes faster and more privately than full proceedings, when the " +
             "process is prepared with the same rigour as a hearing. We help clients assess when mediation " +
             "serves their interests and how to enter it with a credible settlement mandate.",
           "Our lawyers represent parties in court-annexed mediation, institutional mediation, and " +
@@ -499,10 +498,10 @@ export const pillarDetails: PillarDetail[] = [
         description:
           "Integrated advisory on the appropriate resolution forum and strategy for complex commercial " +
           "disputes. We assess the merits, evaluate procedural options, and advise on the most efficient " +
-          "path to resolution — whether through courts, arbitration, or alternative mechanisms.",
+          "path to resolution, whether through courts, arbitration, or alternative mechanisms.",
         body: [
           "Not every dispute should follow the same path. Our dispute resolution advisory helps clients " +
-            "map options — litigation, arbitration, mediation, or negotiated exit — against cost, speed, " +
+            "map options (litigation, arbitration, mediation, or negotiated exit) against cost, speed, " +
             "confidentiality, and enforceability.",
           "We work with in-house teams from the first serious disagreement, shaping correspondence, " +
             "preservation of evidence, and escalation clauses before positions harden.",
@@ -545,10 +544,10 @@ export const pillarDetails: PillarDetail[] = [
     tagline: "Navigating the UAE's evolving regulatory landscape with precision and practical clarity.",
     description:
       "Our Regulatory & Compliance pillar supports businesses operating in one of the world's most " +
-      "active and rapidly evolving regulatory environments. From data protection and corporate tax to " +
-      "sector-specific licensing and legislative frameworks, we translate regulatory complexity into " +
-      "operational clarity. Our team has advised government entities, multinational corporations, and " +
-      "regional businesses on the full spectrum of UAE regulatory requirements.",
+      "active regulatory environments. From data protection and corporate tax to sector-specific " +
+      "licensing, we translate regulatory complexity into operational clarity. Our team has advised " +
+      "government entities, multinational corporations, and regional businesses on the full spectrum of " +
+      "UAE regulatory requirements.",
     areas: [
       {
         name: "Corporate Compliance",

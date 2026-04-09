@@ -131,10 +131,9 @@ export default function PracticeAreasPage() {
                 A cohesive practice, deliberately organised.
               </h2>
               <p className="mt-5 font-body text-body-lg leading-relaxed text-wave-300/80">
-                Our practice areas are built around three structurally distinct
-                pillars — Corporate &amp; Transactions, Disputes, and Regulatory
-                &amp; Compliance — each staffed by specialists who work
-                exclusively in their domain.
+                Our practice areas are built around three structurally distinct pillars, each staffed by
+                specialists who work exclusively in their domain: Corporate &amp; Transactions, Disputes,
+                and Regulatory &amp; Compliance.
               </p>
             </div>
           </AnimateIn>

@@ -9,7 +9,8 @@
 // =============================================================
 
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -17,19 +18,32 @@ import { LenisProvider } from "@/components/providers/LenisProvider";
 
 // -----------------------------------------------------------
 // FONT SETUP
-// next/font downloads these from Google at build time and
-// self-hosts them. No external network requests for fonts
-// in production -- better privacy and performance.
+// Heading: Amara Serif (brand) — WOFF2 files in /public/images/fonts/
+// Body: DM Sans via next/font/google (build-time self-host, no runtime Google CSS).
 //
-// `variable` creates a CSS custom property (e.g. --font-heading)
-// that our Tailwind config reads via font-heading / font-body.
+// `variable` exposes --font-heading-var / --font-body-var for Tailwind
+// (font-heading / font-body in @theme).
 // -----------------------------------------------------------
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-heading-var", // changed from --font-heading
+const amaraSerif = localFont({
+  src: [
+    {
+      path: "../../public/images/fonts/AmaraSerif-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/images/fonts/AmaraSerif-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/images/fonts/AmaraSerif-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
+  variable: "--font-heading-var",
   display: "swap",
 });
 
@@ -72,7 +86,7 @@ export default function RootLayout({
       lang="en"
       // Both CSS variable classes applied here so Tailwind
       // can use font-heading and font-body anywhere in the app
-      className={`${cormorant.variable} ${dmSans.variable}`}
+      className={`${amaraSerif.variable} ${dmSans.variable}`}
     >
       <body>
         <LenisProvider>

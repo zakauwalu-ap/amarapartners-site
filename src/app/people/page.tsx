@@ -24,7 +24,7 @@ export default function PeoplePage() {
       <PageHeader
         title="Our People"
         eyebrow="The Team"
-        subtitle="Experienced practitioners across our three pillars — Corporate & Transactions, Disputes, and Regulatory & Compliance."
+        subtitle="Experienced practitioners across our three pillars: Corporate & Transactions, Disputes, and Regulatory & Compliance."
         breadcrumb={[
           { label: "Home", href: "/" },
           { label: "People" },

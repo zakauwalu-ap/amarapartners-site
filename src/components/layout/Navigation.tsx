@@ -20,8 +20,9 @@ import { MobileMenu } from "@/components/layout/nav/MobileMenu";
 import { navLinks } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 
-const LOGO_GREY = "/images/logo/A&P_logo_grey_primary_RGB.svg";
-const LOGO_WHITE = "/images/logo/A&P_logo_white_primary_RGB.svg";
+// Tight-crop pair (same viewBox): grey for transparent nav on light hero, white for solid bar
+const LOGO_GREY = "/images/logo/A&P_logo_grey_primary_RGB_no_bg.svg";
+const LOGO_WHITE = "/images/logo/A&P_logo_white_primary_RGB_no_bg.svg";
 
 export function Navigation() {
   // -------------------------------------------------------------------------
@@ -121,22 +122,22 @@ export function Navigation() {
             <Image
               src={LOGO_GREY}
               alt="Amara & Partners Legal Consultants"
-              width={252}
-              height={144}
+              width={175}
+              height={46}
               priority
               className={cn(
-                "h-12 lg:h-16 w-auto transition-opacity duration-300",
+                "h-[2.625rem] w-auto transition-opacity duration-300 lg:h-[3.75rem]",
                 isScrolled && "opacity-0"
               )}
             />
             <Image
               src={LOGO_WHITE}
               alt=""
-              width={252}
-              height={144}
+              width={175}
+              height={46}
               priority
               className={cn(
-                "absolute top-0 left-0 h-12 lg:h-16 w-auto transition-opacity duration-300",
+                "absolute top-0 left-0 h-[2.625rem] w-auto transition-opacity duration-300 lg:h-[3.75rem]",
                 isScrolled ? "opacity-100" : "opacity-0"
               )}
               aria-hidden="true"

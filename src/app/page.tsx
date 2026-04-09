@@ -1,7 +1,6 @@
 // src/app/page.tsx
-// Home page — the WaveSystem component contains the full scroll experience:
-// the cinematic wave sequence and all five content sections as scroll-driven
-// panels. Nothing else is needed here at the page level.
+// Home page — WaveSystem provides the wave backdrop, hero, and scroll narrative
+// sections (practice, industries, firm, insights, jurisdictions, contact).
 
 import { Hero } from "@/components/sections/Hero";
 

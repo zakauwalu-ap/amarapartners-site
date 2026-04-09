@@ -50,7 +50,7 @@ const JURISDICTIONS: JurisdictionData[] = [
     name: "UAE Mainland",
     shortName: "Mainland",
     badge: "Onshore",
-    tagline: "The UAE's federal legal framework — governing most commercial activity in the country.",
+    tagline: "The UAE's federal legal framework, governing most commercial activity in the country.",
     description:
       "UAE mainland law is the primary legal framework for businesses incorporated under the UAE Commercial " +
       "Companies Law. Onshore companies are subject to federal legislation administered through the Ministry " +
@@ -59,8 +59,8 @@ const JURISDICTIONS: JurisdictionData[] = [
     bodyText:
       "The UAE Civil Code and Commercial Transactions Law form the foundation of the mainland legal system, " +
       "with specialised legislation covering corporate, employment, real estate, banking, and regulatory " +
-      "matters. Disputes are resolved through the UAE courts — the Abu Dhabi Courts, Dubai Courts, or other " +
-      "emirate courts as relevant — with the option of arbitration under DIAC or other arbitral institutions " +
+      "matters. Disputes are resolved through the UAE courts (the Abu Dhabi Courts, Dubai Courts, or other " +
+      "emirate courts as relevant), with the option of arbitration under DIAC or other arbitral institutions " +
       "for commercial disputes where the parties have agreed to it. The 2020 amendments to the Commercial " +
       "Companies Law significantly liberalised foreign ownership requirements, allowing 100% foreign " +
       "ownership in most sectors without the need for a UAE national partner.",
@@ -77,7 +77,7 @@ const JURISDICTIONS: JurisdictionData[] = [
     name: "Abu Dhabi Global Market",
     shortName: "ADGM",
     badge: "International Financial Centre",
-    tagline: "Abu Dhabi's international financial centre — English common law, English-language courts.",
+    tagline: "Abu Dhabi's international financial centre: English common law, English-language courts.",
     description:
       "The Abu Dhabi Global Market (ADGM) is an international financial centre established on Al Maryah " +
       "Island, operating under English common law. As a federal financial free zone, ADGM has its own " +
@@ -85,12 +85,12 @@ const JURISDICTIONS: JurisdictionData[] = [
       "Courts), and company registry.",
     bodyText:
       "ADGM applies English common law as its foundational legal framework, supplemented by ADGM-specific " +
-      "legislation covering financial services, companies, employment, and arbitration. The ADGM Courts — " +
-      "which include a Court of First Instance and a Court of Appeal — are presided over by senior " +
+      "legislation covering financial services, companies, employment, and arbitration. The ADGM Courts " +
+      "(which include a Court of First Instance and a Court of Appeal) are presided over by senior " +
       "English judiciary and apply English common law principles. This makes ADGM an attractive domicile " +
       "for international businesses, investment funds, and financial services firms that require the " +
-      "predictability and enforceability of a common law framework. The ADGM Arbitration Centre (ADGMAC) " +
-      "provides a dedicated arbitration venue, and ADGM judgments benefit from reciprocal enforcement " +
+      "predictability of a common law framework. The ADGM Arbitration Centre (ADGMAC) " +
+      "provides a dedicated arbitration venue, and ADGM judgements benefit from reciprocal enforcement " +
       "arrangements within the UAE and with a growing number of foreign jurisdictions.",
     keyPoints: [
       "English common law applies in full",
@@ -105,7 +105,7 @@ const JURISDICTIONS: JurisdictionData[] = [
     name: "Dubai International Financial Centre",
     shortName: "DIFC",
     badge: "International Financial Centre",
-    tagline: "Dubai's international financial centre — established English-law framework, large professional community.",
+    tagline: "Dubai's international financial centre: established English-law framework, large professional community.",
     description:
       "The Dubai International Financial Centre (DIFC) is the region's longest-established international " +
       "financial centre, operating on a separate legal and regulatory framework from Dubai mainland. Like " +
@@ -113,7 +113,7 @@ const JURISDICTIONS: JurisdictionData[] = [
       "the Dubai Financial Services Authority (DFSA).",
     bodyText:
       "DIFC has been operating since 2004 and has developed a substantial professional community, a deep " +
-      "arbitration practice, and an extensive body of DIFC Court judgments that provide meaningful " +
+      "arbitration practice, and an extensive body of DIFC Court judgements that provide meaningful " +
       "precedent. The DIFC Courts have developed an expansive jurisdiction over the years, including " +
       "through the opt-in mechanism that allows parties with no connection to DIFC to elect DIFC Court " +
       "jurisdiction for their disputes. The DIFC-LCIA Arbitration Centre (now operating as the DIFC " +
@@ -125,7 +125,7 @@ const JURISDICTIONS: JurisdictionData[] = [
       "DIFC Courts with extensive precedent (operating since 2004)",
       "DFSA regulation for financial services businesses",
       "Opt-in jurisdiction available for non-DIFC parties",
-      "Strong arbitration tradition — DIFC Arbitration Institute",
+      "Strong arbitration tradition, DIFC Arbitration Institute",
     ],
   },
 ];
@@ -244,7 +244,7 @@ export default function JurisdictionsPage() {
       <PageHeader
         title="Jurisdictions"
         eyebrow="Where We Practise"
-        subtitle="We advise across all three of the UAE's principal legal frameworks — mainland, ADGM, and DIFC."
+        subtitle="We advise across all three of the UAE's principal legal frameworks: mainland, ADGM, and DIFC."
         breadcrumb={[
           { label: "Home", href: "/" },
           { label: "Jurisdictions" },
@@ -267,13 +267,11 @@ export default function JurisdictionsPage() {
               </h2>
               <div className="mb-6 h-px w-16 bg-brand-gold" aria-hidden="true" />
               <p className="mb-5 font-body text-body-lg leading-relaxed text-shadow-grey">
-                The UAE mainland, the Abu Dhabi Global Market (ADGM), and the Dubai
-                International Financial Centre (DIFC) each operate under separate
-                legal frameworks — different governing law, different courts, and
-                different regulatory authorities. Understanding which framework
-                applies to your business is not just a technical question; it shapes
-                how contracts are enforced, how disputes are resolved, and what
-                regulatory obligations apply.
+                The UAE mainland, the Abu Dhabi Global Market (ADGM), and the Dubai International
+                Financial Centre (DIFC) each operate under separate legal frameworks. Different governing
+                law, different courts, different regulatory authorities. Understanding which framework applies
+                to your business is not just a technical question; it shapes how contracts are enforced, how
+                disputes are resolved, and what regulatory obligations apply.
               </p>
               <p className="font-body text-body-lg leading-relaxed text-shadow-grey">
                 Amara &amp; Partners practises across all three. Our team advises
@@ -305,11 +303,8 @@ export default function JurisdictionsPage() {
 
           <AnimateIn>
             <div className="mb-12">
-              <p className="mb-3 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-wave-200/60">
-                Side-by-side
-              </p>
               <h2 className="font-heading text-display-md leading-tight text-wave-100">
-                At a glance.
+                At a glance
               </h2>
             </div>
 

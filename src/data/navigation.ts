@@ -53,7 +53,8 @@ export interface PracticeArea {
       number: "03",
       name: "Regulatory & Compliance",
       slug: "regulatory",
-      description: "Navigating the regulatory landscape across the UAE's evolving legal framework.",
+      description:
+        "Navigating the UAE's evolving regulatory landscape with precision and practical clarity.",
       areas: [
         { name: "Corporate Compliance",          slug: "corporate-compliance" },
         { name: "Data Protection (PDPL)",        slug: "data-protection" },

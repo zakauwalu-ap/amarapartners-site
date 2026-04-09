@@ -1,10 +1,7 @@
 // =============================================================================
 // src/components/sections/CTAContact.tsx
 // =============================================================================
-// Zone 5 of the WaveSystem scroll driver — the final content zone.
-// Near-black (wave-700) background. Bold heading, gold primary CTA,
-// secondary "explore practice areas" link, and firm contact details.
-// This panel stays fully visible through to the end of the scroll driver.
+// Home — final contact band with firm details.
 // =============================================================================
 
 import Link from "next/link";
@@ -39,33 +36,22 @@ export function CTAContact() {
 
       <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
 
-        {/* Left column — heading + CTAs */}
         <div className="flex flex-col justify-center">
           <p className="mb-5 font-body text-body-xs font-semibold uppercase tracking-[0.32em] text-brand-gold/70">
-            Get in touch
+            Contact
           </p>
 
-          <h2 className="mb-8 font-heading text-display-lg leading-[1.05] text-wave-100">
-            Let&apos;s discuss your next move.
+          <h2 className="mb-10 max-w-[24ch] font-heading text-display-lg leading-[1.05] text-wave-100">
+            Behind every mandate is a single objective: to advance yours.
           </h2>
 
-          <p className="mb-10 max-w-[44ch] font-body text-body-lg leading-relaxed text-wave-200/70">
-            Whether you are structuring a transaction, navigating a dispute, or
-            managing a regulatory challenge — we are ready to help.
-          </p>
-
-          {/* CTA buttons */}
-          <div className="flex flex-wrap gap-4">
+          <div>
             <Button variant="primary" size="lg" href="/contact" arrow>
               Discuss a mandate
-            </Button>
-            <Button variant="secondary" size="lg" href="/practice">
-              Explore practice areas
             </Button>
           </div>
         </div>
 
-        {/* Right column — contact details */}
         <div className="flex flex-col justify-center">
           <dl className="flex flex-col gap-7">
             {CONTACT_DETAILS.map(({ label, value, href }) => (
@@ -75,10 +61,7 @@ export function CTAContact() {
                 </dt>
                 <dd className="font-body text-body-md leading-relaxed text-wave-100/80">
                   {href ? (
-                    <Link
-                      href={href}
-                      className="transition-colors duration-200 hover:text-brand-gold"
-                    >
+                    <Link href={href} className="transition-colors duration-200 hover:text-brand-gold">
                       {value}
                     </Link>
                   ) : (

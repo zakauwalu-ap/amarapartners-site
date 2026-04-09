@@ -149,7 +149,7 @@ export default function IndustriesPage() {
                 </h2>
                 <p className="mt-5 font-body text-body-lg leading-relaxed text-wave-200/80">
                   Our practice areas extend across all commercial sectors. If
-                  you don&apos;t see your industry listed, get in touch — we
+                  you don&apos;t see your industry listed, get in touch. We
                   very likely advise in your space.
                 </p>
               </div>

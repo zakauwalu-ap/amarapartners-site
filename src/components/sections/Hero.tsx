@@ -1,7 +1,5 @@
-// Home hero — full-viewport layered wave system + logo + location line.
+// Home hero — full-viewport layered wave system + headline and CTAs.
 
 import { WaveSystem } from "@/components/waves/WaveSystem";
 
-const heroEyebrow = "Abu Dhabi · United Arab Emirates";
-
-export const Hero = () => <WaveSystem eyebrow={heroEyebrow} />;
+export const Hero = () => <WaveSystem />;
